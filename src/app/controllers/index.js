@@ -1,8 +1,8 @@
-import Garage from "./Garage";
-import Auth from "./Auth";
-import Rentals from "./Rentals"
-import Records from "./Records"
-import Uploads from "./Uploads"
+import Garage from "./Garage.js";
+import Auth from "./Auth.js";
+import Rentals from "./Rentals.js"
+import Records from "./Records.js"
+import Uploads from "./Uploads.js"
 
 export{Garage, Auth, Rentals, Records, Uploads};
 
