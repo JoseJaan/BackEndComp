@@ -4,6 +4,7 @@
   "description": "aplicacao para aluguel de carros",
   "main": "./src/index.js",
   "scripts": {
+    "start": "node index.js",
     "serve": "nodemon --exec babel-node ./src/index.js",
     "test": "jest --passWithNoTests --detectOpenHandles"
   },
