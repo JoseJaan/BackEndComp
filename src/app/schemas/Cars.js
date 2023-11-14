@@ -1,4 +1,4 @@
-import mongoose from '../../database';
+import mongoose from '../../database/index.js';
 import Slugify from '../../utils/Slugify.js';
 
 const CarsSchema = new mongoose.Schema({

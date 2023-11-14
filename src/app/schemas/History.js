@@ -1,4 +1,4 @@
-import mongoose from '../../database';
+import mongoose from '../../database/index.js';
 
 const HistorySchema = new mongoose.Schema({
   UserName: {
