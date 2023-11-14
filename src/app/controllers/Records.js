@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import Cars from '../schemas/Cars';
-import User from '../schemas/User';
-import Rents from '../schemas/Rents';
+import Cars from '../schemas/Cars.js';
+import User from '../schemas/User.js';
+import Rents from '../schemas/Rents.js';
 import isAuthenticated from '../middlewares/Auth.js';
 import History from '../schemas/History.js';
 import isAdmin from '../middlewares/isAdmin.js';

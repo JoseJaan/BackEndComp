@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import Cars from '../schemas/Cars.js';
-import Slugify from '../../utils/Slugify';
+import Slugify from '../../utils/Slugify.js';
 import isAuthenticated from '../middlewares/Auth.js';
 import Multer from '../middlewares/Multer.js';
 import fs from 'fs';

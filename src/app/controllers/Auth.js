@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import authConfig from '../../config/auth';
+import authConfig from '../../config/auth.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User from '../schemas/User.js';
-import Mailer from '../../modules/Mailer';
-import isAuthenticated from '../middlewares/Auth';
+import Mailer from '../../modules/Mailer.js';
+import isAuthenticated from '../middlewares/Auth.js';
 import Rents from '../schemas/Rents.js';
 
 const router = new Router();
