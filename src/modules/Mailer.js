@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import path from "path";
-import mailConfig from "../config/Mail";
+import mailConfig from "../config/mail.js";
 
 const transport = nodemailer.createTransport({
     host: mailConfig.host,
