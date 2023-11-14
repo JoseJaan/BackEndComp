@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "type": "module",
   "scripts": {
-    "start": "webpack-dev-server --hot",
+    "start": "./src/index.js",
     "serve": "nodemon --exec babel-node ./src/index.js",
     "test": "jest --passWithNoTests --detectOpenHandles"
   },
