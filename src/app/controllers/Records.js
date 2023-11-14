@@ -2,9 +2,9 @@ import { Router } from 'express';
 import Cars from '../schemas/Cars';
 import User from '../schemas/User';
 import Rents from '../schemas/Rents';
-import isAuthenticated from '../middlewares/Auth';
-import History from '../schemas/History';
-import isAdmin from '../middlewares/isAdmin';
+import isAuthenticated from '../middlewares/Auth.js';
+import History from '../schemas/History.js';
+import isAdmin from '../middlewares/isAdmin.js';
 
 const router = new Router();
 

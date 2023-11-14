@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import Cars from '../schemas/Cars';
+import Cars from '../schemas/Cars.js';
 import Slugify from '../../utils/Slugify';
-import isAuthenticated from '../middlewares/Auth';
-import Multer from '../middlewares/Multer';
+import isAuthenticated from '../middlewares/Auth.js';
+import Multer from '../middlewares/Multer.js';
 import fs from 'fs';
-import isAdmin from '../middlewares/isAdmin';
+import isAdmin from '../middlewares/isAdmin.js';
 import path from 'path';
 
 const router = new Router();

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import isAdmin from '../middlewares/isAdmin';
-import isAuthenticated from '../middlewares/Auth';
+import isAdmin from '../middlewares/isAdmin.js';
+import isAuthenticated from '../middlewares/Auth.js';
 
 const router = new Router();
 
