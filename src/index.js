@@ -1,6 +1,6 @@
 import express, {Router} from "express";
 import bodyParser from "body-parser";
-import { Garage, Auth, Rentals, Records, Uploads } from "./app/controllers";
+import { Garage, Auth, Rentals, Records, Uploads } from "./app/controllers/index.js";
 
 const app = express();
 const port = 8080;
