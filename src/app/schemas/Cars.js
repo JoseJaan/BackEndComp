@@ -1,5 +1,5 @@
 import mongoose from '../../database';
-import Slugify from '../../utils/Slugify';
+import Slugify from '../../utils/Slugify.js';
 
 const CarsSchema = new mongoose.Schema({
   name: {

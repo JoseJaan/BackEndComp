@@ -1,5 +1,5 @@
 import multer from 'multer';
-import Slugify from '../../utils/Slugify';
+import Slugify from '../../utils/Slugify.js';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
