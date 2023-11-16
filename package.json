@@ -15,6 +15,7 @@
     "@babel/polyfill": "^7.12.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
     "express-handlebars": "^7.1.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
