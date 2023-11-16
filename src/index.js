@@ -14,7 +14,7 @@ app.use('/rentals',Rentals);
 app.use('/records',Records);
 app.use('/uploads', Uploads)
 
-console.log(`Servidor rodando no link http://localhost:${port}`);
+console.log(`Servidor rodando no link https://rentacar-4y1u.onrender.com`);
 
 app.listen(port);
 
