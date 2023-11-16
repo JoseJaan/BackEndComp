@@ -183,7 +183,7 @@ router.put(
     }
 
   if(VerifyLicensePlate(licensePlate)){
-    Cars.findOne(licensePlate)
+    Cars.findOne({licensePlate})
     .then(exist =>{
       if(exist){
         Cars.findById(req.params.carId)
