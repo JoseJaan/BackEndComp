@@ -1,4 +1,4 @@
-import mongoose from '../../database/index.js';
+import mongoose from '../../database/index.mjs';
 
 const RentSchema = new mongoose.Schema({
   UserName: {
