@@ -47,7 +47,7 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const EndAt = new Date(req.body.EndAt);
 
   if (CreatedAt < Date.now()) {
-    if (EndAt > Date.now() && EndAt > CreatAt) {
+    if (EndAt > Date.now() && EndAt > CreatedAt) {
       User.findById(id)
         .then((user) => {
           Cars.findByIdAndUpdate(
