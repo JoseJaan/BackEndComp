@@ -182,81 +182,82 @@ router.put(
       slug = Slugify(name);
     }
 
-  if(VerifyLicensePlate(licensePlate)){
-    Cars.findOne({licensePlate})
-    .then(exist =>{
-      if(!exist){
-        Cars.findById(req.params.carId)
-          .then((car) => {
-            if (!car) {
-              return res.status(404).send({
-                error: 'Não foi possível encontrar o carro desejado.',
-              });
-            }
-            if (file && car.featuredImage && car.featuredImage.length > 0) {
-              fs.unlinkSync(car.featuredImage);
-            }
-            const updatedData = {
-              name,
-              slug,
-              brand,
-              quantity,
-              description,
-              kilometers,
-              licensePlate,
-              type,
-              price,
-              available,
-            };
-            if (file) {
-              updatedData.featuredImage = file.path;
-            }
-            Cars.findByIdAndUpdate(req.params.carId, updatedData, { new: true })
-              .then((cars) => {
-                return res.status(200).send(cars);
+    if (VerifyLicensePlate(licensePlate)) {
+      Cars.findOne({ licensePlate })
+        .then((exist) => {
+          if (!exist) {
+            Cars.findById(req.params.carId)
+              .then((car) => {
+                if (!car) {
+                  return res.status(404).send({
+                    error: 'Não foi possível encontrar o carro desejado.',
+                  });
+                }
+                if (file && car.featuredImage && car.featuredImage.length > 0) {
+                  fs.unlinkSync(car.featuredImage);
+                }
+                const updatedData = {
+                  name,
+                  slug,
+                  brand,
+                  quantity,
+                  description,
+                  kilometers,
+                  licensePlate,
+                  type,
+                  price,
+                  available,
+                };
+                if (file) {
+                  updatedData.featuredImage = file.path;
+                }
+                Cars.findByIdAndUpdate(req.params.carId, updatedData, {
+                  new: true,
+                })
+                  .then((cars) => {
+                    return res.status(200).send(cars);
+                  })
+                  .catch((error) => {
+                    console.error('Error updating car', error);
+                    return res.status(500).send({
+                      error:
+                        'Não foi possível atualizar os dados do carro. Tente novamente.',
+                    });
+                  });
               })
               .catch((error) => {
-                console.error('Error updating car', error);
+                console.error(
+                  'Error deleting featured image while updating car',
+                  error,
+                );
                 return res.status(500).send({
                   error:
                     'Não foi possível atualizar os dados do carro. Tente novamente.',
                 });
               });
-          })
-          .catch((error) => {
-            console.error(
-              'Error deleting featured image while updating car',
-              error,
-            );
-            return res.status(500).send({
-              error:
-                'Não foi possível atualizar os dados do carro. Tente novamente.',
+          } else {
+            return res.status(403).send({
+              message:
+                'Não foi possível registrar novo carro. Essa placa já foi cadastrada.',
             });
+          }
+        })
+        .catch((error) => {
+          console.error(
+            'Error searching for licensePlate while updating car',
+            error,
+          );
+          return res.status(500).send({
+            error:
+              'Não foi possível atualizar os dados do carro. Tente novamente.',
           });
-      }
-      else{
-        return res.status(403).send({
-          message:
-            'Não foi possível registrar novo carro. Essa placa já foi cadastrada.',
         });
-      }
-    })
-    .catch(error =>{
-      console.error(
-        'Error searching for licensePlate while updating car',
-        error,
-      );
-      return res.status(500).send({
-        error:
-          'Não foi possível atualizar os dados do carro. Tente novamente.',
+    } else {
+      return res.status(403).send({
+        message:
+          'Não foi possível registrar novo carro. Verifique se a placa está correta.',
       });
-    });
-  }else{
-    return res.status(403).send({
-      message:
-        'Não foi possível registrar novo carro. Verifique se a placa está correta.',
-    });
-  }
+    }
   },
 );
 
