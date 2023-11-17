@@ -64,7 +64,7 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                 const licensePlate = car.licensePlate;
                 const carPrice = car.price;
 
-                const rentPrice = carPrice;
+                let rentPrice = carPrice;
                 const milliseconds = Math.abs(EndAt - CreatedAt);
                 const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
