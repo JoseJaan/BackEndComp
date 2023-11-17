@@ -251,12 +251,13 @@ router.put(
           'Não foi possível atualizar os dados do carro. Tente novamente.',
       });
     });
-    }
+  }else{
     //tirar o return talvez resolva
-    res.status(403).send({
+    return res.status(403).send({
       message:
         'Não foi possível registrar novo carro. Verifique se a placa está correta.',
     });
+  }
   },
 );
 
