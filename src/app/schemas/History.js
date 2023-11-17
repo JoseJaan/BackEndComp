@@ -41,7 +41,7 @@ const HistorySchema = new mongoose.Schema({
 //Encontra a diferença entre a data de inicio do aluguel com a data de finalização
 //Faz a conta para calcular o preço final do aluguel (dias * preço)
 //Se a qtd de dias for menor que 1, o preço final será o preço do carro
-HistorySchema.pre('save', function (next) {
+/*HistorySchema.pre('save', function (next) {
   const StartDate = this.CreatedAt;
   const EndDate = this.EndedAt;
 
@@ -56,6 +56,6 @@ HistorySchema.pre('save', function (next) {
   }
 
   next();
-});
+});*/
 
 export default mongoose.model('History', HistorySchema);

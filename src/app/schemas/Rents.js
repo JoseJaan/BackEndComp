@@ -19,7 +19,11 @@ const RentSchema = new mongoose.Schema({
   },
   CreatedAt: {
     type: Date,
-    default: Date.now,
+    required: true,
+  },
+  EndAt: {
+    type: Date,
+    required: true,
   },
   licensePlate: {
     type: String,
@@ -28,6 +32,9 @@ const RentSchema = new mongoose.Schema({
   carPrice: {
     type: Number,
     required: true,
+  },
+  rentPrice: {
+    type: Number,
   },
 });
 

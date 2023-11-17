@@ -43,78 +43,97 @@ Quarto: crio um cadastro de aluguel e atualizo o registro do carro tornando o av
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const id = req.uid;
+  Date ( CreatedAt, EndAt ) = req.body;
+  if(CreatedAt < Date.now()){
+    if((EndAt > Date.now()) && (EndAt > CreatAt)){
+      User.findById(id)
+        .then((user) => {
+          Cars.findByIdAndUpdate(
+            { _id: req.params.carId, available: true },
+            { $set: { available: false } },
+            { new: true },
+          )
+            .then((car) => {
+              if (car) {
+                const UserName = user.name;
+                const UserId = user.id;
+                const UserEmail = user.email;
+                const CarName = car.name;
+                const licensePlate = car.licensePlate;
+                const carPrice = car.price;
 
-  User.findById(id)
-    .then((user) => {
-      Cars.findByIdAndUpdate(
-        { _id: req.params.carId, available: true },
-        { $set: { available: false } },
-        { new: true },
-      )
-        .then((car) => {
-          if (car) {
-            const UserName = user.name;
-            const UserId = user.id;
-            const UserEmail = user.email;
-            const CarName = car.name;
-            const licensePlate = car.licensePlate;
-            const carPrice = car.price;
+                const rentPrice = carPrice;
+                const milliseconds = Math.abs(EndAt - CreatedAt);
+                const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
-            Rents.create({
-              UserName,
-              CarName,
-              UserId,
-              UserEmail,
-              licensePlate,
-              carPrice,
-            })
-              .then((rents) => {
-                return res.status(200).send(rents);
-              })
-              .catch((error) => {
-                Cars.findByIdAndUpdate(
-                  { _id: req.params.carId },
-                  { $set: { available: true } },
-                  { new: true },
-                )
-                  .then(() => {
-                    console.error('Error registering new rent', error);
-                    return res.status(400).send({
-                      message:
-                        'Não foi possível cadastrar o aluguel, tente novamente',
-                    });
+                if (days !== 1){
+                  rentPrice = days * carPrice;
+                }
+
+                Rents.create({
+                  UserName,
+                  CarName,
+                  UserId,
+                  UserEmail,
+                  licensePlate,
+                  carPrice,
+                  CreatedAt,
+                  EndAt,
+                  rentPrice,
+                })
+                  .then((rents) => {
+                    return res.status(200).send(rents);
                   })
-                  .catch((revertError) => {
-                    console.error(
-                      'Error reverting available status to true',
-                      revertError,
-                    );
-                    return res.status(500).send({
-                      error: 'Erro interno do servidor (revertendo available)',
-                    });
+                  .catch((error) => {
+                    Cars.findByIdAndUpdate(
+                      { _id: req.params.carId },
+                      { $set: { available: true } },
+                      { new: true },
+                    )
+                      .then(() => {
+                        console.error('Error registering new rent', error);
+                        return res.status(400).send({
+                          message:
+                            'Não foi possível cadastrar o aluguel, tente novamente',
+                        });
+                      })
+                      .catch((revertError) => {
+                        console.error(
+                          'Error reverting available status to true',
+                          revertError,
+                        );
+                        return res.status(500).send({
+                          error: 'Erro interno do servidor (revertendo available)',
+                        });
+                      });
                   });
-              });
-          } else {
-            return res
-              .status(400)
-              .send({ error: 'Carro não encontrado ou não disponível' });
-          }
+              } else {
+                return res
+                  .status(400)
+                  .send({ error: 'Carro não encontrado ou não disponível' });
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'Error searching for car while registering new rent',
+                error,
+              );
+              return res.status(500).send({ error: 'Erro interno do servidor' });
+            });
         })
         .catch((error) => {
           console.error(
-            'Error searching for car while registering new rent',
+            'Error searching for user while registering new rent',
             error,
           );
           return res.status(500).send({ error: 'Erro interno do servidor' });
         });
-    })
-    .catch((error) => {
-      console.error(
-        'Error searching for user while registering new rent',
-        error,
-      );
-      return res.status(500).send({ error: 'Erro interno do servidor' });
-    });
+      }else{
+        return res.status(403).send({ message: 'A data de finalização não é válida.' });
+      }
+  }else{
+    return res.status(403).send({ message: 'A data de início não é válida.' });
+  }
 });
 
 //Deletar aluguel
@@ -153,6 +172,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
                   const CreatedAt = rent.CreatedAt;
                   const CarPrice = rent.carPrice;
                   const KilometersDriven = kilometersDriven;
+                  const RentPrice = rent.rentPrice;
 
                   History.create({
                     UserName,
@@ -162,6 +182,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
                     CreatedAt,
                     CarPrice,
                     KilometersDriven,
+                    RentPrice,
                   })
                     .then(() => {
                       Rents.findByIdAndRemove(req.params.rentId)
