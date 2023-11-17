@@ -252,7 +252,6 @@ router.put(
       });
     });
   }else{
-    //tirar o return talvez resolva
     return res.status(403).send({
       message:
         'Não foi possível registrar novo carro. Verifique se a placa está correta.',

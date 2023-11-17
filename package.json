@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "aplicacao para aluguel de carros",
   "main": "./src/index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "node src/index.js",
     "serve": "nodemon --exec babel-node ./src/index.js",
