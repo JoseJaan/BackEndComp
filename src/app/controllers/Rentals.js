@@ -43,9 +43,11 @@ Quarto: crio um cadastro de aluguel e atualizo o registro do carro tornando o av
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const id = req.uid;
-  Date ( CreatedAt, EndAt ) = req.body;
-  if(CreatedAt < Date.now()){
-    if((EndAt > Date.now()) && (EndAt > CreatAt)){
+  const CreatedAt = new Date(req.body.CreatedAt);
+  const EndAt = new Date(req.body.EndAt);
+
+  if (CreatedAt < Date.now()) {
+    if (EndAt > Date.now() && EndAt > CreatAt) {
       User.findById(id)
         .then((user) => {
           Cars.findByIdAndUpdate(
@@ -66,7 +68,7 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                 const milliseconds = Math.abs(EndAt - CreatedAt);
                 const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
-                if (days !== 1){
+                if (days !== 1) {
                   rentPrice = days * carPrice;
                 }
 
@@ -103,7 +105,8 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                           revertError,
                         );
                         return res.status(500).send({
-                          error: 'Erro interno do servidor (revertendo available)',
+                          error:
+                            'Erro interno do servidor (revertendo available)',
                         });
                       });
                   });
@@ -118,7 +121,9 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                 'Error searching for car while registering new rent',
                 error,
               );
-              return res.status(500).send({ error: 'Erro interno do servidor' });
+              return res
+                .status(500)
+                .send({ error: 'Erro interno do servidor' });
             });
         })
         .catch((error) => {
@@ -128,10 +133,12 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
           );
           return res.status(500).send({ error: 'Erro interno do servidor' });
         });
-      }else{
-        return res.status(403).send({ message: 'A data de finalização não é válida.' });
-      }
-  }else{
+    } else {
+      return res
+        .status(403)
+        .send({ message: 'A data de finalização não é válida.' });
+    }
+  } else {
     return res.status(403).send({ message: 'A data de início não é válida.' });
   }
 });
