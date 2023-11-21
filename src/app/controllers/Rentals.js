@@ -49,7 +49,7 @@ router.get('/view-rents', isAuthenticated, (req, res) => {
       }
     })
     .catch((error) => {
-      console.error('Error listing rent history', error);
+      console.error('Error listing user rent ', error);
       return res.status(500).send({ error: 'Erro interno do servidor' });
     });
 });
@@ -313,6 +313,7 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
         const CreatedAt = rent.CreatedAt;
         const OldEndDate = rent.EndAt;
         let rentPrice = rent.carPrice;
+        console.log(OldEndDate);
         if (EndAt > Date.now() && EndAt > OldEndDate) {
           const milliseconds = Math.abs(EndAt - CreatedAt);
           const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
