@@ -34,6 +34,26 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
     });
 });
 
+//Faço uma busca por todos os alugueis que possuem o Id do usuário
+//Se nada for encontrado, o tamanho de "data" será 0
+//Com "data.length > 0" verifico se algo foi encontrado, se sim, retorno o dado, caso contrário, retorno o erro
+router.get('/view-rents', isAuthenticated, (req, res) => {
+  const UserId = req.uid;
+
+  Rents.find({ UserId })
+    .then((data) => {
+      if (data.length > 0) {
+        return res.send(data);
+      } else {
+        return res.status(404).send({ message: 'Nenhum aluguel encontrado' });
+      }
+    })
+    .catch((error) => {
+      console.error('Error listing rent history', error);
+      return res.status(500).send({ error: 'Erro interno do servidor' });
+    });
+});
+
 //Cadastrar um novo aluguel
 /*
 Primeiro: verifico se existe um carro com o id recebido no link
@@ -265,8 +285,15 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
     });
 });
 
-//Tem que ter um put para atualizar o aluguel
-router.post('/update-rent/:rentId', isAuthenticated, (req, res) => {
+//Atualizar aluguel
+//Cadastrados
+/*
+Procuro o aluguel pelo Id
+Verifico se o UserId no aluguel é o mesmo que o do user que está acessando
+Valido data inserida e calculo novo preço
+Atualizo aluguel
+*/
+router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
   const EndAt = req.body;
   const UserId = req.uid;
 
