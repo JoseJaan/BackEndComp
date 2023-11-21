@@ -46,100 +46,114 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const CreatedAt = new Date(req.body.CreatedAt);
   const EndAt = new Date(req.body.EndAt);
 
-  if (CreatedAt > Date.now()) {
-    if (EndAt > Date.now() && EndAt > CreatedAt) {
-      User.findById(id)
-        .then((user) => {
-          Cars.findByIdAndUpdate(
-            { _id: req.params.carId, available: true },
-            { $set: { available: false } },
-            { new: true },
-          )
-            .then((car) => {
-              if (car) {
-                const UserName = user.name;
-                const UserId = user.id;
-                const UserEmail = user.email;
-                const CarName = car.name;
-                const licensePlate = car.licensePlate;
-                const carPrice = car.price;
+  const milliseconds = Math.abs(CreatedAt - Date.now());
+  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
-                let rentPrice = carPrice;
-                const milliseconds = Math.abs(EndAt - CreatedAt);
-                const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  if (days < 7) {
+    if (CreatedAt > Date.now()) {
+      if (EndAt > Date.now() && EndAt > CreatedAt) {
+        User.findById(id)
+          .then((user) => {
+            Cars.findByIdAndUpdate(
+              { _id: req.params.carId, available: true },
+              { $set: { available: false } },
+              { new: true },
+            )
+              .then((car) => {
+                if (car) {
+                  const UserName = user.name;
+                  const UserId = user.id;
+                  const UserEmail = user.email;
+                  const CarName = car.name;
+                  const licensePlate = car.licensePlate;
+                  const carPrice = car.price;
 
-                if (days !== 1) {
-                  rentPrice = days * carPrice;
-                }
+                  let rentPrice = carPrice;
+                  const milliseconds = Math.abs(EndAt - CreatedAt);
+                  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
-                Rents.create({
-                  UserName,
-                  CarName,
-                  UserId,
-                  UserEmail,
-                  licensePlate,
-                  carPrice,
-                  CreatedAt,
-                  EndAt,
-                  rentPrice,
-                })
-                  .then((rents) => {
-                    return res.status(200).send(rents);
+                  if (days !== 1) {
+                    rentPrice = days * carPrice;
+                  }
+
+                  Rents.create({
+                    UserName,
+                    CarName,
+                    UserId,
+                    UserEmail,
+                    licensePlate,
+                    carPrice,
+                    CreatedAt,
+                    EndAt,
+                    rentPrice,
                   })
-                  .catch((error) => {
-                    Cars.findByIdAndUpdate(
-                      { _id: req.params.carId },
-                      { $set: { available: true } },
-                      { new: true },
-                    )
-                      .then(() => {
-                        console.error('Error registering new rent', error);
-                        return res.status(400).send({
-                          message:
-                            'Não foi possível cadastrar o aluguel, tente novamente',
+                    .then((rents) => {
+                      return res.status(200).send(rents);
+                    })
+                    .catch((error) => {
+                      Cars.findByIdAndUpdate(
+                        { _id: req.params.carId },
+                        { $set: { available: true } },
+                        { new: true },
+                      )
+                        .then(() => {
+                          console.error('Error registering new rent', error);
+                          return res.status(400).send({
+                            message:
+                              'Não foi possível cadastrar o aluguel, tente novamente',
+                          });
+                        })
+                        .catch((revertError) => {
+                          console.error(
+                            'Error reverting available status to true',
+                            revertError,
+                          );
+                          return res.status(500).send({
+                            error:
+                              'Erro interno do servidor (revertendo available)',
+                          });
                         });
-                      })
-                      .catch((revertError) => {
-                        console.error(
-                          'Error reverting available status to true',
-                          revertError,
-                        );
-                        return res.status(500).send({
-                          error:
-                            'Erro interno do servidor (revertendo available)',
-                        });
-                      });
-                  });
-              } else {
+                    });
+                } else {
+                  return res
+                    .status(400)
+                    .send({ error: 'Carro não encontrado ou não disponível' });
+                }
+              })
+              .catch((error) => {
+                console.error(
+                  'Error searching for car while registering new rent',
+                  error,
+                );
                 return res
-                  .status(400)
-                  .send({ error: 'Carro não encontrado ou não disponível' });
-              }
-            })
-            .catch((error) => {
-              console.error(
-                'Error searching for car while registering new rent',
-                error,
-              );
-              return res
-                .status(500)
-                .send({ error: 'Erro interno do servidor' });
-            });
-        })
-        .catch((error) => {
-          console.error(
-            'Error searching for user while registering new rent',
-            error,
-          );
-          return res.status(500).send({ error: 'Erro interno do servidor' });
-        });
+                  .status(500)
+                  .send({ error: 'Erro interno do servidor' });
+              });
+          })
+          .catch((error) => {
+            console.error(
+              'Error searching for user while registering new rent',
+              error,
+            );
+            return res.status(500).send({ error: 'Erro interno do servidor' });
+          });
+      } else {
+        return res
+          .status(403)
+          .send({ message: 'A data de finalização não é válida.' });
+      }
     } else {
       return res
         .status(403)
-        .send({ message: 'A data de finalização não é válida.' });
+        .send({ message: 'A data de início não é válida.' });
     }
   } else {
-    return res.status(403).send({ message: 'A data de início não é válida.' });
+    return res
+      .status(403)
+      .send({
+        message:
+          'Não é possível cadastrar um aluguel para uma data superior à 7 dias',
+      });
   }
 });
 
