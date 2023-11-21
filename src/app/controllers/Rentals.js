@@ -148,12 +148,10 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
         .send({ message: 'A data de início não é válida.' });
     }
   } else {
-    return res
-      .status(403)
-      .send({
-        message:
-          'Não é possível cadastrar um aluguel para uma data superior à 7 dias',
-      });
+    return res.status(403).send({
+      message:
+        'Não é possível cadastrar um aluguel para uma data superior à 7 dias',
+    });
   }
 });
 
@@ -268,5 +266,68 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
 });
 
 //Tem que ter um put para atualizar o aluguel
+router.post('/update-rent/:rentId', isAuthenticated, (req, res) => {
+  const EndAt = req.body;
+  const UserId = req.uid;
+
+  Rents.findById(req.params.rentId)
+    .then((rent) => {
+      if (!rent) {
+        return res.status(404).send({
+          error: 'Aluguel não encontrado',
+        });
+      }
+      if (!EndAt) {
+        return res.status(400).send({
+          error: 'Data não inserida',
+        });
+      }
+      if (rent.UserId == UserId) {
+        const CreatedAt = rent.CreatedAt;
+        const OldEndDate = rent.EndAt;
+        let rentPrice = rent.carPrice;
+        if (EndAt > Date.now() && EndAt > OldEndDate) {
+          const milliseconds = Math.abs(EndAt - CreatedAt);
+          const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+
+          if (days !== 1) {
+            rentPrice = days * rent.carPrice;
+          }
+          Rents.findByIdAndUpdate(
+            req.params.rentId,
+            { rentPrice, EndAt },
+            {
+              new: true,
+            },
+          )
+            .then(() => {
+              return res.status(200).send(rent);
+            })
+            .catch((error) => {
+              console.error('Error updating rent while updating rent', error);
+              return res.status(500).send({
+                error:
+                  'Não foi possível atualizar os dados do aluguel. Tente novamente.',
+              });
+            });
+        } else {
+          return res.status(400).send({
+            error: 'A data inserida é inválida',
+          });
+        }
+      } else {
+        return res.status(401).send({
+          error: 'Você não possui autorização para alterar esse aluguel',
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Error updating rent while searching for rent', error);
+      return res.status(500).send({
+        error:
+          'Não foi possível atualizar os dados do aluguel. Tente novamente.',
+      });
+    });
+});
 
 export default router;
