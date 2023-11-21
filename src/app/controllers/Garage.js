@@ -11,7 +11,7 @@ const router = new Router();
 
 //Função para verificar se a licensePlate inserida pelo usuário está dentro do padrão
 function VerifyLicensePlate(input) {
-  const regex = /^[A-Za-z]{3}[0-9]{1}[A-Za-z]{1}[0-9]{2}$/;
+  const regex = /^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$/;
 
   return regex.test(input);
 }
