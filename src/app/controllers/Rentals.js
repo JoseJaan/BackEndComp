@@ -285,7 +285,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
     });
 });
 
-//Atualizar aluguel
+//Atualizar data de finalização do aluguel
 //Cadastrados
 /*
 Procuro o aluguel pelo Id
@@ -294,8 +294,7 @@ Valido data inserida e calculo novo preço
 Atualizo aluguel
 */
 router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
-  const EndAt = req.body;
-  const UserId = req.uid;
+  const EndAt = new Date(req.body.EndAt);
 
   Rents.findById(req.params.rentId)
     .then((rent) => {
@@ -309,11 +308,11 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
           error: 'Data não inserida',
         });
       }
-      if (rent.UserId == UserId) {
+      if (rent.UserId == req.uid) {
         const CreatedAt = rent.CreatedAt;
         const OldEndDate = rent.EndAt;
         let rentPrice = rent.carPrice;
-        console.log(OldEndDate);
+
         if (EndAt > Date.now() && EndAt > OldEndDate) {
           const milliseconds = Math.abs(EndAt - CreatedAt);
           const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
