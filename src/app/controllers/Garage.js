@@ -19,13 +19,15 @@ function VerifyLicensePlate(input) {
 //Rota para listar todos os carros
 //Qualquer pessoa pode ver, estando logada ou não
 //Colocar um "Não disponível" nos carros que nao estiverem disponiveis
+//Para crescente: https://rentacar-4y1u.onrender.com/garage/get-cars?order=asc
+//Para decrescente: https://rentacar-4y1u.onrender.com/garage/get-cars?order=desc
 router.get('/get-cars', (req, res) => {
   const order = req.query.order || 'asc';
 
   let sortOptions = {};
-  if (order === 'asc') {
+  if (order == 'asc') {
     sortOptions = { price: 1 };
-  } else if (order === 'desc') {
+  } else if (order == 'desc') {
     sortOptions = { price: -1 };
   }
 
