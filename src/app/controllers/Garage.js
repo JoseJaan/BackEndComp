@@ -113,9 +113,13 @@ router.post('/filter', (req, res) => {
 //A placa do carro (licensePlate) deve estar formatada seguindo o padrão da função "VerificaCampo",
 //  declarada no início do código
 router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
+  if (!order) {
+    return res.status(400).send({ error: 'Nenhum modelo inserido' });
+  }
+  const brand = req.query.type;
+
   const {
     name,
-    brand,
     description,
     kilometers,
     licensePlate,
