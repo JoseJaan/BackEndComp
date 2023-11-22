@@ -12,9 +12,9 @@ const router = new Router();
 //Se nada for encontrado, o tamanho de "data" será 0
 //Com "data.length > 0" verifico se algo foi encontrado, se sim, retorno o dado, caso contrário, retorno o erro
 router.get('/view-history', isAuthenticated, (req, res) => {
-  const UserId = req.uid;
+  const userId = req.uid;
 
-  History.find({ UserId })
+  History.find({ userId })
     .then((data) => {
       if (data.length > 0) {
         return res.send(data);
@@ -35,13 +35,13 @@ router.get('/all-records', [isAuthenticated, isAdmin], (req, res) => {
     .then((data) => {
       const rents = data.map((records) => {
         return {
-          UserName: records.UserName,
-          UserId: records.UserId,
-          CarName: records.CarName,
-          CarLicensePlate: records.CarLicensePlate,
-          CreatedAt: records.CreatedAt,
-          EndedAt: records.EndedAt,
-          RentPrice: records.RentPrice,
+          UserName: records.userName,
+          UserId: records.userId,
+          CarName: records.carName,
+          CarLicensePlate: records.carLicensePlate,
+          CreatedAt: records.createdAt,
+          EndedAt: records.endedAt,
+          RentPrice: records.rentPrice,
         };
       });
       res.send(rents);

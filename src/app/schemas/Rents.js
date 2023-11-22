@@ -1,27 +1,27 @@
 import mongoose from '../../database/index.mjs';
 
 const RentSchema = new mongoose.Schema({
-  UserName: {
+  userName: {
     type: String,
     required: true,
   },
-  UserEmail: {
+  userEmail: {
     type: String,
     required: true,
   },
-  UserId: {
+  userId: {
     type: String,
     required: true,
   },
-  CarName: {
+  carName: {
     type: String,
     required: true,
   },
-  CreatedAt: {
+  createdAt: {
     type: Date,
     required: true,
   },
-  EndAt: {
+  endAt: {
     type: Date,
     required: true,
   },

@@ -11,17 +11,15 @@ const router = new Router();
 //Visualizar alugueis ativos
 //Apenas admin
 router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
-  const id = req.uid;
-
   Rents.find()
     .then((data) => {
       const rents = data.map((rent) => {
         return {
-          UserName: rent.UserName,
-          UserEmail: rent.UserEmail,
-          CarName: rent.CarName,
+          UserName: rent.userName,
+          UserEmail: rent.userEmail,
+          CarName: rent.carName,
           LicensePlate: rent.licensePlate,
-          CreatedAt: rent.CreatedAt,
+          CreatedAt: rent.createdAt,
         };
       });
       return res.send(rents);
@@ -38,9 +36,9 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
 //Se nada for encontrado, o tamanho de "data" será 0
 //Com "data.length > 0" verifico se algo foi encontrado, se sim, retorno o dado, caso contrário, retorno o erro
 router.get('/view-rents', isAuthenticated, (req, res) => {
-  const UserId = req.uid;
+  const uid = req.uid;
 
-  Rents.find({ UserId })
+  Rents.find({ uid })
     .then((data) => {
       if (data.length > 0) {
         return res.send(data);
@@ -62,17 +60,17 @@ Terceiro: verifico se o carro está disponível no estoque (available: true)
 Quarto: crio um cadastro de aluguel e atualizo o registro do carro tornando o available false
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
-  const id = req.uid;
-  const CreatedAt = new Date(req.body.CreatedAt);
-  const EndAt = new Date(req.body.EndAt);
+  const uid = req.uid;
+  const createdAt = new Date(req.body.CreatedAt);
+  const endAt = new Date(req.body.EndAt);
 
-  const milliseconds = Math.abs(CreatedAt - Date.now());
+  const milliseconds = Math.abs(createdAt - Date.now());
   const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
   if (days < 7) {
-    if (CreatedAt > Date.now()) {
-      if (EndAt > Date.now() && EndAt > CreatedAt) {
-        User.findById(id)
+    if (createdAt > Date.now()) {
+      if (endAt > Date.now() && endAt > createdAt) {
+        User.findById(uid)
           .then((user) => {
             Cars.findByIdAndUpdate(
               { _id: req.params.carId, available: true },
@@ -81,15 +79,15 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
             )
               .then((car) => {
                 if (car) {
-                  const UserName = user.name;
-                  const UserId = user.id;
-                  const UserEmail = user.email;
-                  const CarName = car.name;
+                  const userName = user.name;
+                  const userId = user.id;
+                  const userEmail = user.email;
+                  const carName = car.name;
                   const licensePlate = car.licensePlate;
                   const carPrice = car.price;
 
                   let rentPrice = carPrice;
-                  const milliseconds = Math.abs(EndAt - CreatedAt);
+                  const milliseconds = Math.abs(endAt - createdAt);
                   const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
                   if (days !== 1) {
@@ -97,14 +95,14 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                   }
 
                   Rents.create({
-                    UserName,
-                    CarName,
-                    UserId,
-                    UserEmail,
+                    userName,
+                    carName,
+                    userId,
+                    userEmail,
                     licensePlate,
                     carPrice,
-                    CreatedAt,
-                    EndAt,
+                    createdAt,
+                    endAt,
                     rentPrice,
                   })
                     .then((rents) => {
@@ -193,7 +191,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
       if (user) {
         Rents.findById(req.params.rentId)
           .then((rent) => {
-            if (rent.UserId == uid) {
+            if (rent.userId == uid) {
               const licensePlate = rent.licensePlate;
               Cars.findOneAndUpdate(
                 { licensePlate },
@@ -204,24 +202,24 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
                 { new: true },
               )
                 .then(() => {
-                  const UserName = user.name;
-                  const UserId = user.id;
-                  const CarName = rent.CarName;
-                  const CarLicensePlate = licensePlate;
-                  const CreatedAt = rent.CreatedAt;
-                  const CarPrice = rent.carPrice;
-                  const KilometersDriven = kilometersDriven;
-                  const RentPrice = rent.rentPrice;
+                  const userName = user.name;
+                  const userId = user.id;
+                  const carName = rent.carName;
+                  const carLicensePlate = licensePlate;
+                  const createdAt = rent.createdAt;
+                  const carPrice = rent.carPrice;
+                  const kilometersDriven = kilometersDriven;
+                  const rentPrice = rent.rentPrice;
 
                   History.create({
-                    UserName,
-                    UserId,
-                    CarName,
-                    CarLicensePlate,
-                    CreatedAt,
-                    CarPrice,
-                    KilometersDriven,
-                    RentPrice,
+                    userName,
+                    userId,
+                    carName,
+                    carLicensePlate,
+                    createdAt,
+                    carPrice,
+                    kilometersDriven,
+                    rentPrice,
                   })
                     .then(() => {
                       Rents.findByIdAndRemove(req.params.rentId)
@@ -294,7 +292,7 @@ Valido data inserida e calculo novo preço
 Atualizo aluguel
 */
 router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
-  const EndAt = new Date(req.body.EndAt);
+  const endAt = new Date(req.body.endAt);
 
   Rents.findById(req.params.rentId)
     .then((rent) => {
@@ -303,18 +301,18 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
           error: 'Aluguel não encontrado',
         });
       }
-      if (!EndAt) {
+      if (!endAt) {
         return res.status(400).send({
           error: 'Data não inserida',
         });
       }
-      if (rent.UserId == req.uid) {
-        const CreatedAt = rent.CreatedAt;
-        const OldEndDate = rent.EndAt;
+      if (rent.userId == req.uid) {
+        const CreatedAt = rent.createdAt;
+        const OldEndDate = rent.endAt;
         let rentPrice = rent.carPrice;
 
-        if (EndAt > Date.now()) {
-          const milliseconds = Math.abs(EndAt - CreatedAt);
+        if (endAt > Date.now()) {
+          const milliseconds = Math.abs(endAt - CreatedAt);
           const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
           if (days !== 1) {
@@ -322,7 +320,7 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
           }
           Rents.findByIdAndUpdate(
             req.params.rentId,
-            { rentPrice, EndAt },
+            { rentPrice, endAt },
             {
               new: true,
             },

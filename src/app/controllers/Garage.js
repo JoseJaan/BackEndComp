@@ -10,7 +10,7 @@ import path from 'path';
 const router = new Router();
 
 //Função para verificar se a licensePlate inserida pelo usuário está dentro do padrão
-function VerifyLicensePlate(input) {
+function verifyLicensePlate(input) {
   const regex = /^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$/;
 
   return regex.test(input);
@@ -123,7 +123,7 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
     type,
     price,
   } = req.body;
-  if (VerifyLicensePlate(licensePlate)) {
+  if (verifyLicensePlate(licensePlate)) {
     Cars.findOne({ licensePlate })
       .then((carData) => {
         if (carData) {
@@ -194,7 +194,7 @@ router.put(
       slug = Slugify(name);
     }
 
-    if (VerifyLicensePlate(licensePlate)) {
+    if (verifyLicensePlate(licensePlate)) {
       Cars.findOne({ licensePlate })
         .then((exist) => {
           if (!exist) {
