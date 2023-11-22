@@ -112,11 +112,13 @@ router.post('/filter', (req, res) => {
 //Verifica se um carro com a mesma placa já existe, caso contrário, cria o carro
 //A placa do carro (licensePlate) deve estar formatada seguindo o padrão da função "VerificaCampo",
 //  declarada no início do código
+//Exemplo de link: https://rentacar-4y1u.onrender.com/garage/get-cars?type=sedan
 router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
-  if (!order) {
+  if (!req.query.type) {
     return res.status(400).send({ error: 'Nenhum modelo inserido' });
+  } else {
+    const type = req.query.type;
   }
-  const brand = req.query.type;
 
   const {
     name,
@@ -124,7 +126,7 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
     kilometers,
     licensePlate,
     available,
-    type,
+    brand,
     price,
   } = req.body;
   if (verifyLicensePlate(licensePlate)) {
