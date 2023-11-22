@@ -19,18 +19,14 @@ function VerifyLicensePlate(input) {
 //Rota para listar todos os carros
 //Qualquer pessoa pode ver, estando logada ou não
 //Colocar um "Não disponível" nos carros que nao estiverem disponiveis
-router.get('/cars', (req, res) => {
-  const order = req.query.order || 'crescente';
+router.get('/get-cars', (req, res) => {
+  const order = req.query.order || 'asc';
 
   let sortOptions = {};
-  if (order === 'crescente') {
-    sortOptions = { price: 1 }; // Ordem ascendente
-  } else if (order === 'decrescente') {
-    sortOptions = { price: -1 }; // Ordem descendente
-  } else {
-    return res.status(400).send({
-      error: 'Comando inválido',
-    });
+  if (order === 'asc') {
+    sortOptions = { price: 1 };
+  } else if (order === 'desc') {
+    sortOptions = { price: -1 };
   }
 
   Cars.find()
