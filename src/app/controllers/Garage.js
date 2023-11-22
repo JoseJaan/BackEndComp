@@ -116,9 +116,8 @@ router.post('/filter', (req, res) => {
 router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
   if (!req.query.type) {
     return res.status(400).send({ error: 'Nenhum modelo inserido' });
-  } else {
-    const type = req.query.type;
   }
+  const type = req.query.type;
 
   const {
     name,
