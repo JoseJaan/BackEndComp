@@ -20,7 +20,21 @@ function VerifyLicensePlate(input) {
 //Qualquer pessoa pode ver, estando logada ou não
 //Colocar um "Não disponível" nos carros que nao estiverem disponiveis
 router.get('/cars', (req, res) => {
+  const order = req.query.order || 'crescente';
+
+  let sortOptions = {};
+  if (order === 'crescente') {
+    sortOptions = { price: 1 }; // Ordem ascendente
+  } else if (order === 'decrescente') {
+    sortOptions = { price: -1 }; // Ordem descendente
+  } else {
+    return res.status(400).send({
+      error: 'Comando inválido',
+    });
+  }
+
   Cars.find()
+    .sort(sortOptions)
     .then((data) => {
       const cars = data.map((car) => {
         return {
