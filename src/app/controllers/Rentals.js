@@ -313,7 +313,7 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
         const OldEndDate = rent.EndAt;
         let rentPrice = rent.carPrice;
 
-        if (EndAt > Date.now() && EndAt > OldEndDate) {
+        if (EndAt > Date.now()) {
           const milliseconds = Math.abs(EndAt - CreatedAt);
           const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
@@ -327,8 +327,8 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
               new: true,
             },
           )
-            .then(() => {
-              return res.status(200).send(rent);
+            .then((updatedRent) => {
+              return res.status(200).send(updatedRent);
             })
             .catch((error) => {
               console.error('Error updating rent while updating rent', error);
