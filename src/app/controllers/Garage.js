@@ -118,7 +118,7 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
     return res.status(400).send({ error: 'Nenhum modelo inserido' });
   }
 
-  const type = 'Sedan';
+  let type = 'Sedan';
 
   if (req.query.type == 'suv') {
     type = 'SUV';
