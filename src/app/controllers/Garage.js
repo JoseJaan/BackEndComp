@@ -121,9 +121,9 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
   const type = 'Sedan';
 
   if (req.query.type == 'suv') {
-    const type = 'SUV';
+    type = 'SUV';
   } else if (req.query.type == 'utilitario') {
-    const type = 'Utilitário';
+    type = 'Utilitário';
   } else {
     return res.status(400).send({ error: 'Modelo inserido não existente' });
   }
