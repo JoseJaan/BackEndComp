@@ -117,7 +117,16 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
   if (!req.query.type) {
     return res.status(400).send({ error: 'Nenhum modelo inserido' });
   }
-  const type = req.query.type;
+
+  if (req.query.type == 'sedan') {
+    const type = 'Sedan';
+  } else if (req.query.type == 'suv') {
+    const type = 'SUV';
+  } else if (req.query.type == 'utilitario') {
+    const type = 'Utilitário';
+  } else {
+    return res.status(400).send({ error: 'Modelo inserido não existente' });
+  }
 
   const {
     name,
