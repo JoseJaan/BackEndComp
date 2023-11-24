@@ -41,6 +41,7 @@ router.get('/get-cars', (req, res) => {
           description: car.description,
           licensePlate: car.licensePlate,
           price: car.price,
+          id: car._id,
           featuredImage: car.featuredImage,
         };
       });
