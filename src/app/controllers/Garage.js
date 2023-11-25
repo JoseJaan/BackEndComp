@@ -367,7 +367,7 @@ router.post(
 );
 
 //apenas admin
-//adicionar imagens ao carro
+//adicionar imagens ao carro pelo id
 router.post(
   '/images/:carId',
   [isAuthenticated, isAdmin, Multer.array('images')],
@@ -397,6 +397,32 @@ router.post(
       return res.status(400).send({ error: 'Nenhuma imagem enviada' });
     }
   },
+);
+
+router.delete(
+  'delete-featuredImage/:carId',
+  [isAuthenticated, isAdmin],
+  (req,
+  (res) => {
+    Cars.findById(req.params.carId)
+      .then((car) => {
+        if (car) {
+          if (car.featuredImage && car.featuredImage.length > 0) {
+            fs.unlinkSync(car.featuredImage);
+            return res
+              .status(200)
+              .send({ message: 'Imagem removida com sucesso' });
+          } else {
+            return res
+              .status(404)
+              .send({ message: 'Carro não possui featuredImage.' });
+          }
+        } else {
+          return res.status(400).send({ message: 'Carro não encontrado.' });
+        }
+      })
+      .catch((error) => {});
+  }),
 );
 
 export default router;
