@@ -399,7 +399,7 @@ router.post(
   },
 );
 
-router.delete(
+/*router.delete(
   '/delete-featuredimage/:carId',
   [isAuthenticated, isAdmin],
   (req, res) => {
@@ -428,6 +428,6 @@ router.delete(
         return res.status(500).send({ message: 'Carro não encontrado.' });
       });
   },
-);
+);*/
 
 export default router;
