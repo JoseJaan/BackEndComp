@@ -400,7 +400,7 @@ router.post(
 );
 
 router.delete(
-  'delete-featuredimage/:carId',
+  '/delete-featuredimage/:carId',
   [isAuthenticated, isAdmin],
   (req, res) => {
     Cars.findById(req.params.carId)
