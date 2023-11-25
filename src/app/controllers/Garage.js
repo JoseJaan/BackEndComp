@@ -402,8 +402,7 @@ router.post(
 router.delete(
   'delete-featuredImage/:carId',
   [isAuthenticated, isAdmin],
-  (req,
-  (res) => {
+  (req, res) => {
     Cars.findById(req.params.carId)
       .then((car) => {
         if (car) {
@@ -422,7 +421,7 @@ router.delete(
         }
       })
       .catch((error) => {});
-  }),
+  },
 );
 
 export default router;
