@@ -420,7 +420,13 @@ router.delete(
           return res.status(400).send({ message: 'Carro não encontrado.' });
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error(
+          'Error while searching for car while removing featuredImage',
+          error,
+        );
+        return res.status(500).send({ message: 'Carro não encontrado.' });
+      });
   },
 );
 
