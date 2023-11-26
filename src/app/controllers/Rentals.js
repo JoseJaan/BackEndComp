@@ -210,6 +210,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
                   const carPrice = rent.carPrice;
                   const kilometersDriven = kilometersDriven;
                   const rentPrice = rent.rentPrice;
+                  const userEmail = user.email;
 
                   History.create({
                     userName,
@@ -220,6 +221,7 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
                     carPrice,
                     kilometersDriven,
                     rentPrice,
+                    userEmail,
                   })
                     .then(() => {
                       Rents.findByIdAndRemove(req.params.rentId)

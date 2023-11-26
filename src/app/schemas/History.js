@@ -9,6 +9,10 @@ const HistorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userEmail: {
+    type: String,
+    required: true,
+  },
   carName: {
     type: String,
     required: true,
