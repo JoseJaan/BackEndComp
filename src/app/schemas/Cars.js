@@ -52,6 +52,9 @@ const CarsSchema = new mongoose.Schema({
 CarsSchema.pre('save', function (next) {
   const name = this.name;
   this.slug = Slugify(name);
+
+  const brand = this.brand;
+  this.brand = Slugify(brand);
   next();
 });
 
