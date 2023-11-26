@@ -100,16 +100,14 @@ router.post('/filter', (req, res) => {
 
   if (brand) {
     const desiredBrands = brand.split(',');
-    searchOptions.brand = desiredBrands;
+    searchOptions.brand = { $in: desiredBrands };
   }
   if (type) {
     const desiredTypes = type.split(',');
-    searchOptions.type = desiredTypes;
+    searchOptions.type = { $in: desiredTypes };
   }
-  if (available == 'true') {
-    searchOptions.available = true;
-  } else if (available == 'false') {
-    searchOptions.available = false;
+  if (available !== undefined) {
+    searchOptions.available = available === 'true';
   }
 
   Cars.find(searchOptions)
