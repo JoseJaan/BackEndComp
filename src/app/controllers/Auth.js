@@ -56,9 +56,9 @@ router.post('/login', (req, res) => {
               const token = jwt.sign(
                 { id: user.id, isAdmin: user.isAdmin },
                 authConfig.secret,
-                { expiresIn: 86400 },
+                { expiresIn: 10800 },
               );
-              return res.send({ token: token, tokenExpiration: '1d' });
+              return res.send({ token: token, tokenExpiration: '3h' });
             } else {
               return res.status(400).send({ error: 'Senha incorreta' });
             }
