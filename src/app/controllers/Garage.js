@@ -78,20 +78,7 @@ router.get('/:carSlug', (req, res) => {
 //Usuário pode buscar por brand, type e available
 //Qualquer pessoa pode ver, estando logada ou nao
 //Pode possuir mais de um filtro: Cars.find({brand: req.body.brand, quantity: req.body.quantity})
-router.post('/filter', (req, res) => {
-  /*const { brand, type, available } = req.body;
-  const searchOptions = {};
-
-  if (brand !== undefined) {
-    searchOptions.brand = brand;
-  }
-  if (type !== undefined) {
-    searchOptions.type = type;
-  }
-  if (available !== undefined) {
-    searchOptions.available = available;
-  }*/
-
+router.get('/filter', (req, res) => {
   let searchOptions = {};
 
   const brand = req.query.brand;
@@ -107,10 +94,8 @@ router.post('/filter', (req, res) => {
     searchOptions.type = { $in: desiredTypes };
   }
   if (available !== undefined) {
-    searchOptions.available = available === 'true';
+    searchOptions.available = available;
   }
-
-  console.log('Search Options:', searchOptions);
 
   Cars.find(searchOptions)
     .then((car) => {
