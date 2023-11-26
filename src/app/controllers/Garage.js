@@ -110,6 +110,8 @@ router.post('/filter', (req, res) => {
     searchOptions.available = available === 'true';
   }
 
+  console.log('Search Options:', searchOptions);
+
   Cars.find(searchOptions)
     .then((car) => {
       if (car.length > 0) {
