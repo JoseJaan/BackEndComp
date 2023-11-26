@@ -79,7 +79,7 @@ router.get('/:carSlug', (req, res) => {
 //Qualquer pessoa pode ver, estando logada ou nao
 //Pode possuir mais de um filtro: Cars.find({brand: req.body.brand, quantity: req.body.quantity})
 router.post('/filter', (req, res) => {
-  const { brand, type, available } = req.body;
+  /*const { brand, type, available } = req.body;
   const searchOptions = {};
 
   if (brand !== undefined) {
@@ -90,6 +90,26 @@ router.post('/filter', (req, res) => {
   }
   if (available !== undefined) {
     searchOptions.available = available;
+  }*/
+
+  let searchOptions = {};
+
+  const brand = req.query.brand;
+  const type = req.query.type;
+  const available = req.query.available || 'true';
+
+  if (brand) {
+    const desiredBrands = brand.split(',');
+    searchOptions.brand = desiredBrands;
+  }
+  if (type) {
+    const desiredTypes = type.split(',');
+    searchOptions.type = desiredTypes;
+  }
+  if (available == 'true') {
+    searchOptions.available = true;
+  } else if (available == 'false') {
+    searchOptions.available = false;
   }
 
   Cars.find(searchOptions)
