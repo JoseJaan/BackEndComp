@@ -7,7 +7,7 @@ import fs from 'fs';
 import isAdmin from '../middlewares/isAdmin.js';
 import path from 'path';
 import cloudinary from '../../database/cloudinary.config.js';
-import CloudinaryStorage from 'multer-storage-cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const router = new Router();
 
