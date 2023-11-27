@@ -8,7 +8,7 @@ import isAdmin from '../middlewares/isAdmin.js';
 import path from 'path';
 import cloudinary from '../../database/cloudinary.config.js';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import multer from 'multer';
+import _multer from 'multer';
 
 const router = new Router();
 
@@ -343,48 +343,8 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
     });
 });
 
-//Rota par adicionar featured image ao carro pelo Id
-//Verifica a existência do carro
-//Apenas adm
-/*router.post(
-  '/featured-image/:carId',
-  [isAuthenticated, isAdmin, Multer.single('featuredImage')],
-  (req, res) => {
-    const { file } = req;
-    if (file) {
-      Cars.findByIdAndUpdate(
-        req.params.carId,
-        {
-          $set: {
-            featuredImage: file.path,
-          },
-        },
-        { new: true },
-      )
-        .then((car) => {
-          if (car) {
-            return res.send({ car });
-          } else {
-            return res.status(404).send({
-              error: 'Não foi possível encontrar o carro desejado.',
-            });
-          }
-        })
-        .catch((error) => {
-          console.error('Error associating image to car', error);
-          return res.status(500).send({
-            error:
-              'Não foi possível cadastrar imagem ao carro. Tente novamente.',
-          });
-        });
-    } else {
-      return res.status(400).send({ error: 'Nenhuma imagem enviada' });
-    }
-  },
-);*/
-const multerCloudinary = multer({ storage });
+const multerCloudinary = _multer({ storage });
 
-// Sua rota utilizando Multer com Cloudinary
 router.post(
   '/featured-image/:carId',
   [isAuthenticated, isAdmin, multerCloudinary.single('featuredImage')],
