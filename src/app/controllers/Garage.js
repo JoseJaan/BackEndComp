@@ -9,7 +9,6 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import _multer from 'multer';
 import Rents from '../schemas/Rents.js';
 
-const multerCloudinary = _multer({ storage });
 const router = new Router();
 
 //Função para verificar se a licensePlate inserida pelo usuário está dentro do padrão
@@ -27,6 +26,8 @@ const storage = new CloudinaryStorage({
     public_id: (req, file) => `featuredImage_${req.params.carId}`,
   },
 });
+
+const multerCloudinary = _multer({ storage });
 
 //Rota para listar todos os carros
 //Qualquer pessoa pode ver, estando logada ou não
@@ -371,7 +372,7 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
     })
     .catch((error) => {
       console.error(
-        'Error searching for car while removin from database',
+        'Error searching for car while removing car from database',
         error,
       );
       return res.status(500).send({ message: 'Erro ao remover carro' });
