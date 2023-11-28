@@ -74,23 +74,29 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const { startMonthDay, endMonthDay } = req.body;
   const currentYear = new Date().getFullYear();
 
-  const createdAt = `${currentYear}-${startMonthDay}`;
-  const endAt = `${currentYear}-${endMonthDay}`;
+  if (!startMonthDay || !endMonthDay) {
+    return res
+      .status(400)
+      .send({ error: 'Pelo menos uma data não foi inserida.' });
+  }
+
+  const createdAt = new Date(`${currentYear}-${startMonthDay}`);
+  const endAt = new Date(`${currentYear}-${endMonthDay}`);
 
   console.log(createdAt);
   console.log(endAt);
 
   if (
-    isNaN(createdAt) &&
-    isNaN(endAt) &&
-    createdAt < Date.now() &&
-    createdAt > endAt &&
+    isNaN(createdAt) ||
+    isNaN(endAt) ||
+    createdAt < Date.now() ||
+    createdAt > endAt ||
     endAt < Date.now()
   ) {
-    res.status(400).json({ error: 'Pelo menos uma das datas é inválida' });
+    res.status(400).send({ error: 'Pelo menos uma das datas é inválida' });
   }
-  const milliseconds = Math.abs(createdAt - Date.now());
-  let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  const milliseconds = Math.abs(createdAt - new Date());
+  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
   console.log(milliseconds);
   console.log(days);
