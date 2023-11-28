@@ -39,7 +39,7 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
 router.get('/view-rents', isAuthenticated, (req, res) => {
   const userId = req.uid;
 
-  Rents.find(userId)
+  Rents.find({ userId })
     .then((data) => {
       if (data.length > 0) {
         return {
