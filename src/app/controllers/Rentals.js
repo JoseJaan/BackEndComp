@@ -70,18 +70,20 @@ Terceiro: crio um cadastro de aluguel e atualizo o registro do carro tornando o 
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const uid = req.uid;
-  //const createdAt = new Date(req.body.CreatedAt);
-  //const endAt = new Date(req.body.EndAt);
 
-  const createdAtInput = req.body.userDateInput;
-  const endAtInput = req.body.userDateInput;
+  const { startMonthDay, endMonthDay } = req.body;
   const currentYear = new Date().getFullYear();
 
-  const createdAt = `${currentYear}-${createdAtInput}`;
-  const endAt = `${currentYear}-${endAtInput}`;
+  const createdAt = `${currentYear}-${startMonthDay}`;
+  const endAt = `${currentYear}-${endMonthDay}`;
 
-  const milliseconds = Math.abs(createdAt - Date.now());
-  let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  if (!isNaN(createdAt) && !isNaN(endAt)) {
+    const milliseconds = Math.abs(createdAt - Date.now());
+    let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  } else {
+    res.status(400).json({ error: 'Pelo menos uma das datas é inválida' });
+  }
+
   console.log(createdAt);
   console.log(endAt);
   console.log(milliseconds);
