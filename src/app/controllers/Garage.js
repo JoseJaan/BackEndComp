@@ -312,13 +312,17 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                 .split('/')
                 .pop()
                 .split('.')[0];
-              cloudinary.uploader.destroy(featuredImagePublicId);
+              cloudinary.uploader.destroy(featuredImagePublicId, {
+                invalidate: true,
+              });
             }
 
             if (car.images && car.images.length > 0) {
               car.images.forEach((image) => {
                 const imagePublicId = image.split('/').pop().split('.')[0];
-                cloudinary.uploader.destroy(imagePublicId);
+                cloudinary.uploader.destroy(imagePublicId, {
+                  invalidate: true,
+                });
               });
             }
             if (car) {
