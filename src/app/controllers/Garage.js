@@ -10,6 +10,7 @@ import cloudinary from '../../database/cloudinary.config.js';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import _multer from 'multer';
 
+const multerCloudinary = _multer({ storage });
 const router = new Router();
 
 //Função para verificar se a licensePlate inserida pelo usuário está dentro do padrão
@@ -22,9 +23,9 @@ function verifyLicensePlate(input) {
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'cld-sample-5', // Substitua pelo seu folder no Cloudinary
-    format: async (req, file) => 'png', // Pode ser ajustado conforme necessário
-    public_id: (req, file) => `featuredImage_${req.params.carId}`, // Nome do arquivo no Cloudinary
+    folder: 'cld-sample-5',
+    format: async (req, file) => 'jpg',
+    public_id: (req, file) => `featuredImage_${req.params.carId}`,
   },
 });
 
@@ -205,44 +206,37 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
 //É verificado separadamente se uma imagem foi inserida, para evitar o erro do programa tentar ler algo indefinido
 //   caso não tenha nenhuma imagem
 //"updatedData" é passada como parametro na atualização
-router.put(
-  '/update-car/:carId',
-  [isAuthenticated, isAdmin, Multer.single('featuredImage')],
-  (req, res) => {
-    const {
-      name,
-      brand,
-      quantity,
-      description,
-      kilometers,
-      licensePlate,
-      type,
-      price,
-      available,
-    } = req.body;
-    const { file } = req;
-    let slug = undefined;
-    if (name) {
-      slug = Slugify(name);
-    }
+router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
+  const {
+    name,
+    brand,
+    quantity,
+    description,
+    kilometers,
+    licensePlate,
+    type,
+    price,
+    available,
+  } = req.body;
 
-    if (verifyLicensePlate(licensePlate)) {
-      Cars.findOne({ licensePlate })
-        .then((exist) => {
-          if (!exist) {
-            Cars.findById(req.params.carId)
-              .then((car) => {
-                if (!car) {
-                  return res.status(404).send({
-                    error: 'Não foi possível encontrar o carro desejado.',
-                  });
-                }
-                if (file && car.featuredImage && car.featuredImage.length > 0) {
-                  fs.unlinkSync(car.featuredImage);
-                }
+  if (!verifyLicensePlate(licensePlate)) {
+    return res.status(403).send({
+      message:
+        'Não foi possível registrar novo carro. Verifique se a placa está correta.',
+    });
+  } else {
+    Cars.findOne({ licensePlate })
+      .then((exist) => {
+        if (!exist) {
+          Cars.findById(req.params.carId)
+            .then((car) => {
+              if (!car) {
+                return res.status(404).send({
+                  error: 'Não foi possível encontrar o carro desejado.',
+                });
+              } else {
                 const updatedData = {
                   name,
-                  slug,
                   brand,
                   quantity,
                   description,
@@ -252,9 +246,7 @@ router.put(
                   price,
                   available,
                 };
-                if (file) {
-                  updatedData.featuredImage = file.path;
-                }
+
                 Cars.findByIdAndUpdate(req.params.carId, updatedData, {
                   new: true,
                 })
@@ -268,42 +260,37 @@ router.put(
                         'Não foi possível atualizar os dados do carro. Tente novamente.',
                     });
                   });
-              })
-              .catch((error) => {
-                console.error(
-                  'Error deleting featured image while updating car',
-                  error,
-                );
-                return res.status(500).send({
-                  error:
-                    'Não foi possível atualizar os dados do carro. Tente novamente.',
-                });
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'Error searching for car while updating car',
+                error,
+              );
+              return res.status(500).send({
+                error:
+                  'Não foi possível atualizar os dados do carro. Tente novamente.',
               });
-          } else {
-            return res.status(403).send({
-              message:
-                'Não foi possível registrar novo carro. Essa placa já foi cadastrada.',
             });
-          }
-        })
-        .catch((error) => {
-          console.error(
-            'Error searching for licensePlate while updating car',
-            error,
-          );
-          return res.status(500).send({
-            error:
-              'Não foi possível atualizar os dados do carro. Tente novamente.',
+        } else {
+          return res.status(403).send({
+            message:
+              'Não foi possível registrar novo carro. Essa placa já foi cadastrada.',
           });
+        }
+      })
+      .catch((error) => {
+        console.error(
+          'Error searching for licensePlate while updating car',
+          error,
+        );
+        return res.status(500).send({
+          error:
+            'Não foi possível atualizar os dados do carro. Tente novamente.',
         });
-    } else {
-      return res.status(403).send({
-        message:
-          'Não foi possível registrar novo carro. Verifique se a placa está correta.',
       });
-    }
-  },
-);
+  }
+});
 
 //Rota para deletar carro pelo Id
 //Verifica a existência do carro
@@ -343,8 +330,7 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
     });
 });
 
-const multerCloudinary = _multer({ storage });
-
+//Adicionar featuredImage pelo id
 router.post(
   '/featured-image/:carId',
   [isAuthenticated, isAdmin, multerCloudinary.single('featuredImage')],
