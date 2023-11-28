@@ -41,20 +41,17 @@ router.get('/view-rents', isAuthenticated, (req, res) => {
 
   Rents.find({ userId })
     .then((data) => {
-      if (data.length > 0) {
+      const rents = data.map((rent) => {
         return {
-          userName: data.userName,
-          userEmail: data.userEmail,
-          id: data._id,
-          rentPrice: data.rentPrice,
-          carName: data.carName,
-          licensePlate: data.licensePlate,
-          createdAt: data.createdAt,
-          endAt: data.endAt,
+          id: rent._id,
+          rentPrice: rent.rentPrice,
+          carName: rent.carName,
+          licensePlate: rent.licensePlate,
+          createdAt: rent.createdAt,
+          endAt: rent.endAt,
         };
-      } else {
-        return res.status(404).send({ message: 'Nenhum aluguel encontrado' });
-      }
+      });
+      return res.send(rents);
     })
     .catch((error) => {
       console.error('Error listing user rent ', error);
