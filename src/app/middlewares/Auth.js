@@ -21,7 +21,6 @@ export default (req, res, next) => {
           .send({ error: 'O token fornecido não é válido' });
       } else {
         req.isAdmin = decoded.isAdmin;
-        req.user = decoded;
         req.uid = decoded.id;
         return next();
       }

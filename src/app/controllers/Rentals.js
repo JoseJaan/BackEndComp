@@ -38,6 +38,8 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
 router.get('/view-rents', isAuthenticated, (req, res) => {
   const uid = req.uid;
 
+  console.log(uid);
+
   Rents.find({ uid })
     .then((data) => {
       if (data.length > 0) {
@@ -55,9 +57,8 @@ router.get('/view-rents', isAuthenticated, (req, res) => {
 //Cadastrar um novo aluguel
 /*
 Primeiro: verifico se existe um carro com o id recebido no link
-Segundo: verifico se existe um usuario com o id recebido pelo middleware
-Terceiro: verifico se o carro está disponível no estoque (available: true)
-Quarto: crio um cadastro de aluguel e atualizo o registro do carro tornando o available false
+Segundo: verifico se o carro está disponível no estoque (available: true)
+Terceiro: crio um cadastro de aluguel e atualizo o registro do carro tornando o available false
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const uid = req.uid;

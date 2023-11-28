@@ -208,14 +208,24 @@ router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
   const {
     name,
     brand,
-    quantity,
     description,
     kilometers,
     licensePlate,
-    type,
     price,
     available,
   } = req.body;
+
+  if (req.query.type) {
+    let type = 'Sedan';
+
+    if (req.query.type == 'suv') {
+      type = 'SUV';
+    } else if (req.query.type == 'utilitario') {
+      type = 'Utilitário';
+    } else {
+      return res.status(400).send({ error: 'Modelo inserido não existente' });
+    }
+  }
 
   if (!verifyLicensePlate(licensePlate)) {
     return res.status(403).send({
@@ -236,7 +246,6 @@ router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                 const updatedData = {
                   name,
                   brand,
-                  quantity,
                   description,
                   kilometers,
                   licensePlate,
@@ -305,24 +314,6 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                 'Impossível remover carro, existe um aluguel ativo com ele',
             });
           } else {
-            /*if (car.featuredImage && car.featuredImage.length > 0) {
-              const featuredImagePublicId = car.featuredImage
-                .split('/')
-                .pop()
-                .split('.')[0];
-              cloudinary.uploader.destroy(featuredImagePublicId, {
-                invalidate: true,
-              });
-            }
-
-            if (car.images && car.images.length > 0) {
-              car.images.forEach((image) => {
-                const imagePublicId = image.split('/').pop().split('.')[0];
-                cloudinary.uploader.destroy(imagePublicId, {
-                  invalidate: true,
-                });
-              });
-            }*/
             if (car) {
               Cars.findByIdAndRemove(req.params.carId)
                 .then(() => {

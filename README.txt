@@ -126,7 +126,7 @@
 
 
 
-        ->https://rentacar-4y1u.onrender.com/auth/delete-account - DELETE
+        ->https://rentacar-4y1u.onrender.com/auth/delete-account - DELETE - Apenas logados
             Deleta a conta do usuário.
             Se o usuário possuir um aluguel ativo, não é possivel realizar a remoção.
             É necessário estar logado.
@@ -157,7 +157,7 @@
 
 
 
-        ->https://rentacar-4y1u.onrender.com/garage/get-cars?type=xxxx - POST
+        ->https://rentacar-4y1u.onrender.com/garage/post-cars?type=xxxx - POST - Apenas Admins
             Adiciona um novo carro ao banco de dados
             O "type" do carro deve ser inserido no link, não é possível adicionar um "type" que não esteja já 
                 especificado dentro do código
@@ -167,9 +167,9 @@
                 "name": "yyy",
                 "description": "aaa",
                 "kilometers": 0,
-                "licensePlate": "",
+                "licensePlate": "xxx",
                 "available": true,
-                "brand": "",
+                "brand": "ttt",
                 "price": 150
             }
             
@@ -178,10 +178,67 @@
                 LM LM LM NI LM NI NI
                 (Escrever sem espaços)
 
-            Rota acessível apenas para Admins
 
-        ->https://rentacar-4y1u.onrender.com/garage/update-car/carId - PUT
+        ->https://rentacar-4y1u.onrender.com/garage/update-car/:carId - PUT - Apenas Admins
+            Atualiza as informações de um carro
+            Se um nova "licensePlate" for inserida, é verificada sua validade
+            O "type" deve ser inserido no link, da mesma forma como é feita na rota de adicionar um carro
 
+            Formato do Json no ambiente de testes:
+            {
+                "name": "yyy",
+                "description": "aaa",
+                "kilometers": 0,
+                "licensePlate": "xxx",
+                "available": true,
+                "brand": "ttt",
+                "price": 150
+            }
+
+
+        ->https://rentacar-4y1u.onrender.com/garage/delete-car/:carId - DELETE - Apenas Admins
+            Realiza a remoção de um carro
+            Não é possível remover o carro caso ele esteja cadastrado em um aluguel ativo
+
+        
+        ->https://rentacar-4y1u.onrender.com/garage/featured-image/:carId - POST - Apenas Admins
+            Adiciona uma "featuredImage" ao carro, que é armazenada no Cloudinary
+            Para utilizar a rota no Insomnia, deve-se selecionar "Multipart Form", selecionar "value" como "file"
+                e escrever "featuredImage" (sem as aspas) no "name"
+
+    -Rotas no src/app/controllers/Rentals.js 
+
+        ->https://rentacar-4y1u.onrender.com/rentals/get-rents - GET - Apenas Admins
+            Lista todos os alugueis ativos
+
+
+        ->https://rentacar-4y1u.onrender.com/rentals/view-rents - GET - Apenas logados
+            Lista todos os alugueis ativos do usuário naquele momento
+        
+
+        ->https://rentacar-4y1u.onrender.com/rentals/post-rent:carId - POST - Apenas logados
+            Cria um aluguel
+            É verificado se o carro existe e está disponível
+            Não é possível criar um aluguel
+            O usuário deve inserir a data de início e fim do aluguel, todas as datas tem sua validade verificada
+            Não é possível inserir uma data de início maior que 7 dias em relação a data atualizado
+
+            Formato do Json no ambiente de testes:
+            {
+                "createdAt": "MM/DD/YYYY"
+                "endAt": "MM/DD/YYYY"
+            }
+
+
+        ->https://rentacar-4y1u.onrender.com/rentals/delete-rent:rentId - DELETE - Apenas logados
+            Finaliza um aluguel
+            Apenas o usuário criador daquele aluguel tem permissão para finaliza-lo
+            O usuário insere quantos kilometros ele andou com o carro
+
+            Formato do Json no ambiente de testes:
+            {
+                "kilometersDriven": 10
+            }      
 
 
         
