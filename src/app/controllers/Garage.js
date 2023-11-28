@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import Cars from '../schemas/Cars.js';
 import isAuthenticated from '../middlewares/Auth.js';
-import Multer from '../middlewares/Multer.js';
 import fs from 'fs';
 import isAdmin from '../middlewares/isAdmin.js';
 import cloudinary from '../../database/cloudinary.config.js';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import _multer from 'multer';
+import multer from 'multer';
 import Rents from '../schemas/Rents.js';
 
 const router = new Router();
@@ -27,7 +26,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const multerCloudinary = _multer({ storage });
+const multerCloudinary = multer({ storage });
 
 //Rota para listar todos os carros
 //Qualquer pessoa pode ver, estando logada ou não
@@ -307,7 +306,7 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                 'Impossível remover carro, existe um aluguel ativo com ele',
             });
           } else {
-            if (car.featuredImage && car.featuredImage.length > 0) {
+            /*if (car.featuredImage && car.featuredImage.length > 0) {
               const featuredImagePublicId = car.featuredImage
                 .split('/')
                 .pop()
@@ -324,7 +323,7 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                   invalidate: true,
                 });
               });
-            }
+            }*/
             if (car) {
               Cars.findByIdAndRemove(req.params.carId)
                 .then(() => {
@@ -403,29 +402,38 @@ router.post(
 //adicionar imagens ao carro pelo id
 router.post(
   '/images/:carId',
-  [isAuthenticated, isAdmin, Multer.array('images')],
+  [isAuthenticated, isAdmin, multerCloudinary.single('images')],
   (req, res) => {
-    const { files } = req;
-    if (files && files.length > 0) {
-      const images = [];
-      files.forEach((file) => {
-        images.push(file.path);
-      });
-      Cars.findByIdAndUpdate(
-        req.params.carId,
-        { $set: { images } },
-        { new: true },
-      )
-        .then((car) => {
-          return res.send({ car });
-        })
-        .catch((error) => {
-          console.error('Error associating images to car', error);
+    const { file } = req;
+
+    if (file) {
+      cloudinary.uploader.upload(file.path, (result, error) => {
+        if (error) {
+          console.error('Error uploading image to Cloudinary', error);
           return res.status(500).send({
-            error:
-              'Não foi possível cadastrar imagens ao carro. Tente novamente.',
+            error: 'Não foi possível enviar a imagem. Tente novamente.',
           });
-        });
+        } else {
+          fs.unlinkSync(file.path);
+
+          Cars.findByIdAndUpdate(
+            req.params.carId,
+            { $set: { images: result.secure_url } },
+            { new: true },
+            (err, car) => {
+              if (err) {
+                console.error('Error associating image to car', err);
+                return res.status(500).send({
+                  error:
+                    'Não foi possível cadastrar a imagem ao carro. Tente novamente.',
+                });
+              } else {
+                return res.send({ car });
+              }
+            },
+          );
+        }
+      });
     } else {
       return res.status(400).send({ error: 'Nenhuma imagem enviada' });
     }
