@@ -75,7 +75,9 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
 
   const milliseconds = Math.abs(createdAt - Date.now());
   let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
-
+  console.log(createdAt);
+  console.log(endAt);
+  console.log(milliseconds);
   console.log(days);
   if (days < 7) {
     if (createdAt > Date.now()) {
