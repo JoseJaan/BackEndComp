@@ -308,41 +308,17 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
             });
           } else {
             if (car.featuredImage && car.featuredImage.length > 0) {
-              const featuredImagePublicId = car.featuredImage.replace(
-                'https://res.cloudinary.com/dk2lghev4/image/upload/',
-                '',
-              );
-              cloudinary.uploader.destroy(featuredImagePublicId, (error) => {
-                if (error) {
-                  console.error(
-                    'Error removing featured image from Cloudinary',
-                    error,
-                  );
-                  return res
-                    .status(500)
-                    .send({ message: 'Erro interno do servidor' });
-                }
-              });
+              const featuredImagePublicId = car.featuredImage
+                .split('/')
+                .pop()
+                .split('.')[0];
+              cloudinary.uploader.destroy(featuredImagePublicId);
             }
 
             if (car.images && car.images.length > 0) {
               car.images.forEach((image) => {
-                const imagePublicId = image.replace(
-                  'https://res.cloudinary.com/dk2lghev4/image/upload/',
-                  '',
-                );
-
-                cloudinary.uploader.destroy(imagePublicId, (error) => {
-                  if (error) {
-                    console.error(
-                      'Error removing additional image from Cloudinary',
-                      error,
-                    );
-                    return res
-                      .status(500)
-                      .send({ message: 'Erro interno do servidor' });
-                  }
-                });
+                const imagePublicId = image.split('/').pop().split('.')[0];
+                cloudinary.uploader.destroy(imagePublicId);
               });
             }
             if (car) {

@@ -188,93 +188,89 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
 
   User.findById(uid)
     .then((user) => {
-      if (user) {
-        Rents.findById(req.params.rentId)
-          .then((rent) => {
-            if (rent.userId == uid) {
-              const licensePlate = rent.licensePlate;
-              Cars.findOneAndUpdate(
-                { licensePlate },
-                {
-                  $set: { available: true },
-                  $inc: { kilometers: kilometersDriven },
-                },
-                { new: true },
-              )
-                .then(() => {
-                  const userName = user.name;
-                  const userId = user.id;
-                  const carName = rent.carName;
-                  const carLicensePlate = licensePlate;
-                  const createdAt = rent.createdAt;
-                  const carPrice = rent.carPrice;
-                  const kilometersDriven = kilometersDriven;
-                  const rentPrice = rent.rentPrice;
-                  const userEmail = user.email;
+      Rents.findById(req.params.rentId)
+        .then((rent) => {
+          if (rent.userId == uid) {
+            const licensePlate = rent.licensePlate;
+            Cars.findOneAndUpdate(
+              { licensePlate },
+              {
+                $set: { available: true },
+                $inc: { kilometers: kilometersDriven },
+              },
+              { new: true },
+            )
+              .then(() => {
+                const userName = user.name;
+                const userId = user.id;
+                const carName = rent.carName;
+                const carLicensePlate = licensePlate;
+                const createdAt = rent.createdAt;
+                const carPrice = rent.carPrice;
+                const kilometersDriven = kilometersDriven;
+                const rentPrice = rent.rentPrice;
+                const userEmail = user.email;
 
-                  History.create({
-                    userName,
-                    userId,
-                    carName,
-                    carLicensePlate,
-                    createdAt,
-                    carPrice,
-                    kilometersDriven,
-                    rentPrice,
-                    userEmail,
-                  })
-                    .then(() => {
-                      Rents.findByIdAndRemove(req.params.rentId)
-                        .then(() => {
-                          return res
-                            .status(200)
-                            .send({ message: 'Aluguel removido com sucesso!' });
-                        })
-                        .catch((error) => {
-                          console.error(
-                            'Error removing rent while removing rent from database',
-                            error,
-                          );
-                          return res
-                            .status(500)
-                            .send({ message: 'Erro ao remover aluguel' });
-                        });
-                    })
-                    .catch((error) => {
-                      console.error(
-                        'Error creating rent record while removing rent from database',
-                        error,
-                      );
-                      return res
-                        .status(400)
-                        .send({ message: 'Erro ao remover aluguel' });
-                    });
+                History.create({
+                  userName,
+                  userId,
+                  carName,
+                  carLicensePlate,
+                  createdAt,
+                  carPrice,
+                  kilometersDriven,
+                  rentPrice,
+                  userEmail,
                 })
-                .catch((error) => {
-                  console.error(
-                    'Error updating car while removing rent from database',
-                    error,
-                  );
-                  return res
-                    .status(400)
-                    .send({ message: 'Erro ao remover aluguel' });
-                });
-            } else {
-              return res.status(403).send({
-                message: 'Você não tem permissão para remover esse aluguel',
+                  .then(() => {
+                    Rents.findByIdAndRemove(req.params.rentId)
+                      .then(() => {
+                        return res
+                          .status(200)
+                          .send({ message: 'Aluguel removido com sucesso!' });
+                      })
+                      .catch((error) => {
+                        console.error(
+                          'Error removing rent while removing rent from database',
+                          error,
+                        );
+                        return res
+                          .status(500)
+                          .send({ message: 'Erro ao remover aluguel' });
+                      });
+                  })
+                  .catch((error) => {
+                    console.error(
+                      'Error creating rent record while removing rent from database',
+                      error,
+                    );
+                    return res
+                      .status(400)
+                      .send({ message: 'Erro ao remover aluguel' });
+                  });
+              })
+              .catch((error) => {
+                console.error(
+                  'Error updating car while removing rent from database',
+                  error,
+                );
+                return res
+                  .status(400)
+                  .send({ message: 'Erro ao remover aluguel' });
               });
-            }
-          })
-          .catch((error) => {
-            console.error(
-              'Error searching for rent while removing rent from database',
-              error,
-            );
-            return res.status(500).send({ message: 'Erro ao remover aluguel' });
-          });
-      } else {
-        return res.status(404).send({ message: 'Usuário não encontrado' });
-      }
+          } else {
+            return res.status(403).send({
+              message: 'Você não tem permissão para remover esse aluguel',
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(
+            'Error searching for rent while removing rent from database',
+            error,
+          );
+          return res.status(500).send({ message: 'Erro ao remover aluguel' });
+        });
     })
     .catch((error) => {
       console.error(
