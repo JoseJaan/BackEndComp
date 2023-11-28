@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import Cars from '../schemas/Cars.js';
-import Slugify from '../../utils/Slugify.js';
 import isAuthenticated from '../middlewares/Auth.js';
 import Multer from '../middlewares/Multer.js';
 import fs from 'fs';
 import isAdmin from '../middlewares/isAdmin.js';
-import path from 'path';
 import cloudinary from '../../database/cloudinary.config.js';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import _multer from 'multer';
+import Rents from '../schemas/Rents.js';
 
 const multerCloudinary = _multer({ storage });
 const router = new Router();
@@ -298,28 +297,77 @@ router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
 router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
   Cars.findById(req.params.carId)
     .then((car) => {
-      if (car) {
-        if (car.featuredImage && car.featuredImage.length > 0) {
-          fs.unlinkSync(car.featuredImage);
-        }
-        if (car.images && car.images.length > 0) {
-          car.images.forEach((image) => {
-            fs.unlinkSync(image);
-          });
-        }
-        Cars.findByIdAndRemove(req.params.carId)
-          .then(() => {
-            return res.send({ message: 'Carro removido com sucesso.' });
-          })
-          .catch((error) => {
-            console.error('Error removing car from database', error);
-            return res.status(500).send({ message: 'Erro ao remover carro' });
-          });
-      } else {
-        return res.status(404).send({
-          error: 'Não foi possível encontrar o carro desejado.',
+      Rents.findOne(car.licensePlate)
+        .then((rent) => {
+          if (rent) {
+            return res.status(400).send({
+              message:
+                'Impossível remover carro, existe um aluguel ativo com ele',
+            });
+          } else {
+            if (car.featuredImage && car.featuredImage.length > 0) {
+              const featuredImagePublicId = car.featuredImage.replace(
+                'https://res.cloudinary.com/dk2lghev4/image/upload/',
+                '',
+              );
+              cloudinary.uploader.destroy(featuredImagePublicId, (error) => {
+                if (error) {
+                  console.error(
+                    'Error removing featured image from Cloudinary',
+                    error,
+                  );
+                  return res
+                    .status(500)
+                    .send({ message: 'Erro interno do servidor' });
+                }
+              });
+            }
+
+            if (car.images && car.images.length > 0) {
+              car.images.forEach((image) => {
+                const imagePublicId = image.replace(
+                  'https://res.cloudinary.com/dk2lghev4/image/upload/',
+                  '',
+                );
+
+                cloudinary.uploader.destroy(imagePublicId, (error) => {
+                  if (error) {
+                    console.error(
+                      'Error removing additional image from Cloudinary',
+                      error,
+                    );
+                    return res
+                      .status(500)
+                      .send({ message: 'Erro interno do servidor' });
+                  }
+                });
+              });
+            }
+            if (car) {
+              Cars.findByIdAndRemove(req.params.carId)
+                .then(() => {
+                  return res.send({ message: 'Carro removido com sucesso.' });
+                })
+                .catch((error) => {
+                  console.error('Error removing car from database', error);
+                  return res
+                    .status(500)
+                    .send({ message: 'Erro interno do servidor' });
+                });
+            } else {
+              return res.status(404).send({
+                error: 'Não foi possível encontrar o carro desejado.',
+              });
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(
+            'Error searching for rent while removing car from database',
+            error,
+          );
+          return res.status(500).send({ message: 'Erro interno do servidor' });
         });
-      }
     })
     .catch((error) => {
       console.error(
