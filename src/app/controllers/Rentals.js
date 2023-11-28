@@ -70,8 +70,15 @@ Terceiro: crio um cadastro de aluguel e atualizo o registro do carro tornando o 
 */
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const uid = req.uid;
-  const createdAt = new Date(req.body.CreatedAt);
-  const endAt = new Date(req.body.EndAt);
+  //const createdAt = new Date(req.body.CreatedAt);
+  //const endAt = new Date(req.body.EndAt);
+
+  const createdAtInput = req.body.userDateInput;
+  const endAtInput = req.body.userDateInput;
+  const currentYear = new Date().getFullYear();
+
+  const createdAt = `${currentYear}-${createdAtInput}`;
+  const endAt = `${currentYear}-${endAtInput}`;
 
   const milliseconds = Math.abs(createdAt - Date.now());
   let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
