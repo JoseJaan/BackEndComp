@@ -37,11 +37,9 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
 //Se nada for encontrado, o tamanho de "data" será 0
 //Com "data.length > 0" verifico se algo foi encontrado, se sim, retorno o dado, caso contrário, retorno o erro
 router.get('/view-rents', isAuthenticated, (req, res) => {
-  const uid = req.uid;
+  const userId = req.uid;
 
-  console.log(uid);
-
-  Rents.find(uid)
+  Rents.find(userId)
     .then((data) => {
       if (data.length > 0) {
         return {
