@@ -225,8 +225,8 @@
 
             Formato do Json no ambiente de testes:
             {
-                "createdAt": "MM/DD/YYYY"
-                "endAt": "MM/DD/YYYY"
+                "startDayMonth": "MM/DD"
+                "endDayMonth": "MM/DD"
             }
 
 

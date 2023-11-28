@@ -86,9 +86,6 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const createdAt = new Date(`${currentYear}-${startMonth}-${startDay}`);
   const endAt = new Date(`${currentYear}-${endMonth}-${endDay}`);
 
-  console.log(createdAt);
-  console.log(endAt);
-
   if (
     isNaN(createdAt) ||
     isNaN(endAt) ||
@@ -100,9 +97,6 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   }
   const milliseconds = Math.abs(createdAt - new Date());
   let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
-
-  console.log(milliseconds);
-  console.log(days);
 
   if (days < 7) {
     User.findById(uid)
