@@ -306,7 +306,12 @@ Valido data inserida e calculo novo preço
 Atualizo aluguel
 */
 router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
-  const endAt = new Date(req.body.endAt);
+  const newEndDayMonth = req.body;
+
+  const [endMonth, endDay] = newEndDayMonth.split('/');
+  const currentYear = new Date().getFullYear();
+
+  const endAt = new Date(`${currentYear}-${endMonth}-${endDay}`);
 
   Rents.findById(req.params.rentId)
     .then((rent) => {
@@ -322,7 +327,6 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
       }
       if (rent.userId == req.uid) {
         const CreatedAt = rent.createdAt;
-        const OldEndDate = rent.endAt;
         let rentPrice = rent.carPrice;
 
         if (endAt > Date.now()) {

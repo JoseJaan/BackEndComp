@@ -238,7 +238,18 @@
             Formato do Json no ambiente de testes:
             {
                 "kilometersDriven": 10
-            }      
+            }
+
+
+        ->https://rentacar-4y1u.onrender.com/rentals/update-rent/:rentId - PUT - Apenas logados
+            Atualiza a data final de um aluguel
+            Apenas o usuário criador daquele aluguel tem permissão para atualiza-lo
+            É possível extender ou diminuir a data de finalização
+
+            Formato do Json no ambiente de testes:
+            {
+                "newEndDayMonth": "MM/DD"
+            }     
 
 
         
