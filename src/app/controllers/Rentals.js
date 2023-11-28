@@ -308,6 +308,10 @@ Atualizo aluguel
 router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
   const newEndDayMonth = req.body;
 
+  if (!newEndDayMonth) {
+    return res.status(400).send({ error: 'Data não inserida.' });
+  }
+
   const [endMonth, endDay] = newEndDayMonth.split('/');
   const currentYear = new Date().getFullYear();
 
