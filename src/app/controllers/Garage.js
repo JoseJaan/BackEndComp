@@ -298,7 +298,7 @@ router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
 router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
   Cars.findById(req.params.carId)
     .then((car) => {
-      Rents.findOne(car.licensePlate)
+      Rents.findOne({ licensePlate: car.licensePlate })
         .then((rent) => {
           if (rent) {
             return res.status(400).send({
