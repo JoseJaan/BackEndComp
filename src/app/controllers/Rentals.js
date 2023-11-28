@@ -41,7 +41,7 @@ router.get('/view-rents', isAuthenticated, (req, res) => {
 
   console.log(uid);
 
-  Rents.find({ uid })
+  Rents.find(uid)
     .then((data) => {
       if (data.length > 0) {
         return {
