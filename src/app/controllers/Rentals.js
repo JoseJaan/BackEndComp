@@ -20,6 +20,7 @@ router.get('/get-rents', [isAuthenticated, isAdmin], (req, res) => {
           CarName: rent.carName,
           LicensePlate: rent.licensePlate,
           CreatedAt: rent.createdAt,
+          id: rent._id,
         };
       });
       return res.send(rents);
@@ -43,7 +44,16 @@ router.get('/view-rents', isAuthenticated, (req, res) => {
   Rents.find({ uid })
     .then((data) => {
       if (data.length > 0) {
-        return res.send(data);
+        return {
+          userName: data.userName,
+          userEmail: data.userEmail,
+          id: data._id,
+          rentPrice: data.rentPrice,
+          carName: data.carName,
+          licensePlate: data.licensePlate,
+          createdAt: data.createdAt,
+          endAt: data.endAt,
+        };
       } else {
         return res.status(404).send({ message: 'Nenhum aluguel encontrado' });
       }

@@ -72,7 +72,15 @@ router.get('/:carSlug', (req, res) => {
   Cars.findOne({ slug: req.params.carSlug })
     .then((car) => {
       if (car) {
-        return res.send(car);
+        return {
+          name: car.name,
+          type: car.type,
+          description: car.description,
+          licensePlate: car.licensePlate,
+          price: car.price,
+          id: car._id,
+          featuredImage: car.featuredImage,
+        };
       } else {
         return res.status(404).send({ message: 'Nenhum carro encontrado' });
       }
