@@ -71,17 +71,20 @@ Terceiro: crio um cadastro de aluguel e atualizo o registro do carro tornando o 
 router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const uid = req.uid;
 
-  const { startMonthDay, endMonthDay } = req.body;
+  const { startDayMonth, endDayMonth } = req.body;
   const currentYear = new Date().getFullYear();
 
-  if (!startMonthDay || !endMonthDay) {
+  if (!startDayMonth || !endDayMonth) {
     return res
       .status(400)
       .send({ error: 'Pelo menos uma data não foi inserida.' });
   }
 
-  const createdAt = new Date(`${currentYear}-${startMonthDay}`);
-  const endAt = new Date(`${currentYear}-${endMonthDay}`);
+  const [startMonth, startDay] = startDayMonth.split('/');
+  const [endMonth, endDay] = endDayMonth.split('/');
+
+  const createdAt = new Date(`${currentYear}-${startMonth}-${startDay}`);
+  const endAt = new Date(`${currentYear}-${endMonth}-${endDay}`);
 
   console.log(createdAt);
   console.log(endAt);
