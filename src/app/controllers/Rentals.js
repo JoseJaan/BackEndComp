@@ -96,7 +96,7 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
     res.status(400).send({ error: 'Pelo menos uma das datas é inválida' });
   }
   const milliseconds = Math.abs(createdAt - new Date());
-  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
   console.log(milliseconds);
   console.log(days);
