@@ -199,6 +199,8 @@ router.delete('/delete-rent/:rentId', isAuthenticated, (req, res) => {
     .then((user) => {
       Rents.findById(req.params.rentId)
         .then((rent) => {
+          console.log(rent.userId);
+          console.log(uid);
           if (rent.userId == uid) {
             const licensePlate = rent.licensePlate;
             Cars.findOneAndUpdate(
