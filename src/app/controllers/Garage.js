@@ -21,7 +21,6 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'cld-sample-5',
-    format: async (req, file) => 'jpg',
     public_id: (req, file) => `featuredImage_${req.params.carId}`,
   },
 });
@@ -392,48 +391,6 @@ router.post(
               'Não foi possível cadastrar imagem ao carro. Tente novamente.',
           });
         });
-    } else {
-      return res.status(400).send({ error: 'Nenhuma imagem enviada' });
-    }
-  },
-);
-
-//apenas admin
-//adicionar imagens ao carro pelo id
-router.post(
-  '/images/:carId',
-  [isAuthenticated, isAdmin, multerCloudinary.single('images')],
-  (req, res) => {
-    const { file } = req;
-
-    if (file) {
-      cloudinary.uploader.upload(file.path, (result, error) => {
-        if (error) {
-          console.error('Error uploading image to Cloudinary', error);
-          return res.status(500).send({
-            error: 'Não foi possível enviar a imagem. Tente novamente.',
-          });
-        } else {
-          fs.unlinkSync(file.path);
-
-          Cars.findByIdAndUpdate(
-            req.params.carId,
-            { $set: { images: result.secure_url } },
-            { new: true },
-            (err, car) => {
-              if (err) {
-                console.error('Error associating image to car', err);
-                return res.status(500).send({
-                  error:
-                    'Não foi possível cadastrar a imagem ao carro. Tente novamente.',
-                });
-              } else {
-                return res.send({ car });
-              }
-            },
-          );
-        }
-      });
     } else {
       return res.status(400).send({ error: 'Nenhuma imagem enviada' });
     }

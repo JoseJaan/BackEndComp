@@ -42,11 +42,6 @@ const CarsSchema = new mongoose.Schema({
   featuredImage: {
     type: String,
   },
-  images: [
-    {
-      type: String,
-    },
-  ],
 });
 
 CarsSchema.pre('save', function (next) {
