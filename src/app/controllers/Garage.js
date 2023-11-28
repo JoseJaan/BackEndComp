@@ -416,35 +416,4 @@ router.post(
   },
 );
 
-/*router.delete(
-  '/delete-featuredimage/:carId',
-  [isAuthenticated, isAdmin],
-  (req, res) => {
-    Cars.findById(req.params.carId)
-      .then((car) => {
-        if (car) {
-          if (car.featuredImage && car.featuredImage.length > 0) {
-            fs.unlinkSync(car.featuredImage);
-            return res
-              .status(200)
-              .send({ message: 'Imagem removida com sucesso' });
-          } else {
-            return res
-              .status(404)
-              .send({ message: 'Carro não possui featuredImage.' });
-          }
-        } else {
-          return res.status(400).send({ message: 'Carro não encontrado.' });
-        }
-      })
-      .catch((error) => {
-        console.error(
-          'Error while searching for car while removing featuredImage',
-          error,
-        );
-        return res.status(500).send({ message: 'Carro não encontrado.' });
-      });
-  },
-);*/
-
 export default router;
