@@ -74,8 +74,9 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   const endAt = new Date(req.body.EndAt);
 
   const milliseconds = Math.abs(createdAt - Date.now());
-  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+  let days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
+  console.log(days);
   if (days < 7) {
     if (createdAt > Date.now()) {
       if (endAt > Date.now() && endAt > createdAt) {
@@ -97,7 +98,7 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
 
                   let rentPrice = carPrice;
                   const milliseconds = Math.abs(endAt - createdAt);
-                  const days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
+                  days = Math.ceil(milliseconds / (1000 * 60 * 60 * 24));
 
                   if (days !== 1) {
                     rentPrice = days * carPrice;
