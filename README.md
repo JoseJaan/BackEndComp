@@ -17,6 +17,8 @@
     -Como a aplicação não roda localmente, todas as operações são realizadas no seguinte link, com cada rota
     sendo detalhada posteriormente: https://rentacar-4y1u.onrender.com
 
+    -Caso seja desejado, pode-se rodar o npm install para instalar o node_modules
+
 ## Tecnologias
 
     -NodeJs, JavaScript, MongoDB Atlas, Cloudinary

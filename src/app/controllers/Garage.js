@@ -396,10 +396,6 @@ router.post(
 );
 
 router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
-  if (!mongoose.isValidObjectId(carId)) {
-    return res.status(400).send({ message: 'ID de carro inválido' });
-  }
-
   Cars.findById(req.params.carId)
     .then((car) => {
       if (!car) {
