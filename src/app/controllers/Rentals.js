@@ -312,6 +312,12 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
     return res.status(400).send({ error: 'Data não inserida.' });
   }
 
+  console.log(newEndDayMonth);
+
+  if (typeof newEndDayMonth !== 'string') {
+    return res.status(400).send({ error: 'Data inserida não é uma string.' });
+  }
+
   const [endDay, endMonth] = newEndDayMonth.split('/');
   const currentYear = new Date().getFullYear();
 

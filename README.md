@@ -1,4 +1,7 @@
+# Markdown
+
 ## Introdução ao projeto
+
     -Tema: Sistema para aluguel de veículos
 
     -Testado com Insomnia
@@ -11,7 +14,7 @@
 
 ## Como rodar
 
-    -Como a aplicação não roda localmente, todas as operações são realizadas no seguinte link, com cada rota 
+    -Como a aplicação não roda localmente, todas as operações são realizadas no seguinte link, com cada rota
     sendo detalhada posteriormente: https://rentacar-4y1u.onrender.com
 
 ## Tecnologias
@@ -19,11 +22,12 @@
     -NodeJs, JavaScript, MongoDB Atlas
 
 ## Descrição:
+
     -A aplicação utiliza 4 schemas, sendo eles: User, Cars, Rents e History.
 
     -Todos os schemas foram pensados para garantir um funcionamento mais dinâmico e com mais possibilidades.
 
-    -A aplicação trabalha com 3 tipos de usuários: deslogados, logados e administradores. Cada um possui 
+    -A aplicação trabalha com 3 tipos de usuários: deslogados, logados e administradores. Cada um possui
     diferentes permissões.
 
 ## Detalhamento dos schemas:
@@ -32,10 +36,10 @@
             Define a estrutura de um veículo, contendo os seguintes campos:
         name, slug, brand, available, price, type, description, licensePlate, kilometers, featuredImage e images.
 
-            O campo "slug" recebe o "name" do veículo após um processo de "Slugify", enquanto "brand" passa pelo mesmo processo 
+            O campo "slug" recebe o "name" do veículo após um processo de "Slugify", enquanto "brand" passa pelo mesmo processo
         para padronizar a escrita das brands.
 
-            Cada carro possui uma "licensePlate" única, que deve ser escrita no seguinte formato: 
+            Cada carro possui uma "licensePlate" única, que deve ser escrita no seguinte formato:
         (LM = Letra Maíscula, NI = Número inteiro entre 0 e 9)
         LM LM LM NI LM NI NI
         (Escrever sem espaços)
@@ -50,7 +54,7 @@
 
             Cada usuário possui um email único.
 
-            A Boolean "isAdmin" será verdadeira caso o email inserido seja igual a algum email existente dentro 
+            A Boolean "isAdmin" será verdadeira caso o email inserido seja igual a algum email existente dentro
         do próprio Schema do User (src/app/schemas/User.js), em uma função "pre save".
 
             A senha do usuário é criptografada também em uma função "pre save", utilizando o bcrypt.
@@ -58,15 +62,14 @@
     -Rents:
             Define a estrutura de um aluguel, contendo os seguintes campos:
         userName, userEmail, userId, carName, createdAt, endAt, licensePlate, carPrice, rentPrice.
-            
+
             O campo "rentPrice" é calculado multiplicando o "carPrice" pela quantidade de dias que o carro estará alugado.
-            
+
             Caso o aluguel dure menos de 1 dia, o valor do aluguel é o próprio preço do aluguel do carro.
 
     -History:
             Define a estrutura do históricos de alugueis, contendo os seguintes campos:
         userName, userEmail, userId, carName, createdAt, endedAt, licensePlate, carPrice, rentPrice, kilometersDrive.
-
 
 ## Detalhamento das rotas:
 
@@ -101,7 +104,7 @@
 
 
 
-        ->https://rentacar-4y1u.onrender.com/auth/forgot-password - POST 
+        ->https://rentacar-4y1u.onrender.com/auth/forgot-password - POST
             Envia um email para o usuário contendo um token que será utilizado para resetar a senha.
             Utiliza o NodeMailer e MailTrap para realizar o envio do email.
             O formato do email está contido no src/resources/mail/auth/forgot-password.html.
@@ -159,7 +162,7 @@
 
         ->https://rentacar-4y1u.onrender.com/garage/post-cars?type=xxxx - POST - Apenas Admins
             Adiciona um novo carro ao banco de dados
-            O "type" do carro deve ser inserido no link, não é possível adicionar um "type" que não esteja já 
+            O "type" do carro deve ser inserido no link, não é possível adicionar um "type" que não esteja já
                 especificado dentro do código
 
             Formato do Json no ambiente de testes:
@@ -172,7 +175,7 @@
                 "brand": "ttt",
                 "price": 150
             }
-            
+
             A "licensePlate" deve ser inserida no seguinte formato:
                 (LM = Letra Maíscula, NI = Número inteiro entre 0 e 9)
                 LM LM LM NI LM NI NI
@@ -200,13 +203,13 @@
             Realiza a remoção de um carro
             Não é possível remover o carro caso ele esteja cadastrado em um aluguel ativo
 
-        
+
         ->https://rentacar-4y1u.onrender.com/garage/featured-image/:carId - POST - Apenas Admins
             Adiciona uma "featuredImage" ao carro, que é armazenada no Cloudinary
             Para utilizar a rota no Insomnia, deve-se selecionar "Multipart Form", selecionar "value" como "file"
                 e escrever "featuredImage" (sem as aspas) no "name"
 
-    -Rotas no src/app/controllers/Rentals.js 
+    -Rotas no src/app/controllers/Rentals.js
 
         ->https://rentacar-4y1u.onrender.com/rentals/get-rents - GET - Apenas Admins
             Lista todos os alugueis ativos
@@ -214,7 +217,7 @@
 
         ->https://rentacar-4y1u.onrender.com/rentals/view-rents - GET - Apenas logados
             Lista todos os alugueis ativos do usuário naquele momento
-        
+
 
         ->https://rentacar-4y1u.onrender.com/rentals/post-rent:carId - POST - Apenas logados
             Cria um aluguel
@@ -249,13 +252,8 @@
             Formato do Json no ambiente de testes:
             {
                 "newEndDayMonth": "MM/DD"
-            }     
-
-
-        
+            }
 
 ## Créditos
+
 - José Acerbi Almeida Neto :o
-
-
-
