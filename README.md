@@ -324,16 +324,16 @@
     Alugueis:
 
         {
-            "userName": "Joaquim",
-            "userEmail": "admin@hotmail.com",
-            "userId": "65671e7da1a49b8ac6865370",
-            "carName": "Journey",
-            "createdAt": "2023-12-01T00:00:00.000Z",
-            "endAt": "2023-12-10T00:00:00.000Z",
-            "licensePlate": "LOL1S70",
-            "carPrice": 250,
-            "rentPrice": 2250,
-            "_id": "6567a30f6e071911e3729321",
+            "userName": "Renato",
+            "userEmail": "renato@gmail.com",
+            "userId": "65671e34a1a49b8ac6865358",
+            "carName": "Civic",
+            "createdAt": "2023-12-04T00:00:00.000Z",
+            "endAt": "2023-12-09T00:00:00.000Z",
+            "licensePlate": "ABC2G54",
+            "carPrice": 100,
+            "rentPrice": 500,
+            "_id": "6567a7706bdfbac82b097646",
             "__v": 0
         }
 
