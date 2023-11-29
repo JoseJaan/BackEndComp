@@ -19,7 +19,7 @@
 
 ## Tecnologias
 
-    -NodeJs, JavaScript, MongoDB Atlas
+    -NodeJs, JavaScript, MongoDB Atlas, Cloudinary
 
 ## Descrição:
 

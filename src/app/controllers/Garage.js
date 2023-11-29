@@ -410,14 +410,14 @@ router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
                 .status(200)
                 .send({ message: 'Carro não está em nenhum aluguel ativo' });
             } else {
-              return {
+              return res.status(200).send({
                 userName: rent.userName,
                 userEmail: rent.userEmail,
                 creatAt: rent.createdAt,
                 endAt: rent.endAt,
                 id: rent._id,
                 rentPrice: rent.rentPrice,
-              };
+              });
             }
           })
           .catch((error) => {
