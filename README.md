@@ -228,8 +228,8 @@
 
             Formato do Json no ambiente de testes:
             {
-                "startDayMonth": "MM/DD"
-                "endDayMonth": "MM/DD"
+                "startDayMonth": "DD/MM"
+                "endDayMonth": "DD/MM"
             }
 
 
@@ -251,7 +251,7 @@
 
             Formato do Json no ambiente de testes:
             {
-                "newEndDayMonth": "MM/DD"
+                "newEndDayMonth": "DD/MM"
             }
 
 

@@ -77,8 +77,8 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
       .send({ error: 'Pelo menos uma data não foi inserida.' });
   }
 
-  const [startMonth, startDay] = startDayMonth.split('/');
-  const [endMonth, endDay] = endDayMonth.split('/');
+  const [startDay, startMonth] = startDayMonth.split('/');
+  const [endDay, endMonth] = endDayMonth.split('/');
 
   const createdAt = new Date(`${currentYear}-${startMonth}-${startDay}`);
   const endAt = new Date(`${currentYear}-${endMonth}-${endDay}`);
@@ -310,12 +310,6 @@ router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
 
   if (!newEndDayMonth) {
     return res.status(400).send({ error: 'Data não inserida.' });
-  }
-
-  console.log(newEndDayMonth);
-
-  if (typeof newEndDayMonth !== 'string') {
-    return res.status(400).send({ error: 'Data inserida não é uma string.' });
   }
 
   const [endDay, endMonth] = newEndDayMonth.split('/');
