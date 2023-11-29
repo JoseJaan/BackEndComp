@@ -257,7 +257,7 @@
             }
 
 
-        __->https://rentacar-4y1u.onrender.com/rentals/update-rent/:rentId - PUT - Apenas logados__
+        ->https://rentacar-4y1u.onrender.com/rentals/update-rent/:rentId - PUT - Apenas logados
             Atualiza a data final de um aluguel
             Apenas o usuário criador daquele aluguel tem permissão para atualiza-lo
             É possível extender ou diminuir a data de finalização
@@ -270,12 +270,34 @@
 
     -Rotas no src/app/controllers/Records.js
 
-        **->https://rentacar-4y1u.onrender.com/records/view-history - GET - Apenas logados**
+        ->https://rentacar-4y1u.onrender.com/records/view-history - GET - Apenas logados
             Lista todos os alugueis passados do usuário que requisitou a rota
 
 
-        *->https://rentacar-4y1u.onrender.com/records/all-records - GET - Apenas admins*
+        ->https://rentacar-4y1u.onrender.com/records/all-records - GET - Apenas admins
             Lista todos os alugueis passados, de qualquer pessoa
+
+## Objetos já existentes dentro do banco de dados
+
+    -Usuários:
+        Usuário comum:
+        {
+            "name": "Pedro",
+            "email": "pedro@outlook.com",
+            "password": "12345"
+        }
+        Usuário comum:
+        {
+            "name": "Renato",
+            "email": "renato@gmail.com",
+            "password": "54321"
+        }
+        Admin:
+        {
+            "name": "Joaquim",
+            "email": "admin@outlook.com",
+            "password": "12345!A"
+        }
 
 ## Créditos
 
