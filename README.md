@@ -30,6 +30,10 @@
     -A aplicação trabalha com 3 tipos de usuários: deslogados, logados e administradores. Cada um possui
     diferentes permissões.
 
+    -Informações de conexão com o MongoDB e Cloudinary foram mantidas dentro de um arquivo .env, para serem utilizadas
+        como uma variável de ambiente e não ficarem expostas dentro do código (no GitHub, por ex).
+        Todas essas variáveis também foram adicionadas às variáveis de ambiente dentro do Render, para o deploy ser realizado corretamente.
+
 ## Detalhamento dos schemas:
 
     -Cars:
@@ -109,6 +113,11 @@
             Utiliza o NodeMailer e MailTrap para realizar o envio do email.
             O formato do email está contido no src/resources/mail/auth/forgot-password.html.
             O token possui duração de 3h.
+
+            Detalhamento do envio de emails:
+                    Com o Nodemailer e o MailTrap, utilizo o arquivo src/modules/Mailer.js para fazer o envio dos emails
+                utilizando o template existante em src/resources/mail/auth/forgot-password.html.
+                    Utilizo o arquivo src/config/mail.js para armazenar as informações de conexão com o MailTrap
 
             Formato do Json no ambiente de testes:
             {

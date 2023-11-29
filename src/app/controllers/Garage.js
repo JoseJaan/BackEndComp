@@ -403,7 +403,7 @@ router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
         return res.status(404).send({ message: 'Carro não encontrado' });
       } else {
         const licensePlate = car.licensePlate;
-        Rents.findOne(licensePlate)
+        Rents.findOne({ licensePlate })
           .then((rent) => {
             if (!rent) {
               return res
