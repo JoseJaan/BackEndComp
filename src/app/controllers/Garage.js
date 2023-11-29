@@ -397,7 +397,8 @@ router.post(
 );
 
 router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
-  Cars.findById(req.params.carId)
+  const carId = req.params.carId;
+  Cars.findById({ carId })
     .then((car) => {
       if (!car) {
         return res.status(404).send({ message: 'Carro não encontrado' });
