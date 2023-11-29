@@ -297,7 +297,7 @@
         Admin:
         {
             "name": "Joaquim",
-            "email": "admin@outlook.com",
+            "email": "admin@hotmail.com",
             "password": "12345!A"
         }
 
@@ -327,15 +327,36 @@
             "userName": "Renato",
             "userEmail": "renato@gmail.com",
             "userId": "65671e34a1a49b8ac6865358",
-            "carName": "Civic",
+            "carName": "Journey",
             "createdAt": "2023-12-04T00:00:00.000Z",
-            "endAt": "2023-12-09T00:00:00.000Z",
-            "licensePlate": "ABC2G54",
-            "carPrice": 100,
-            "rentPrice": 500,
-            "_id": "6567a7706bdfbac82b097646",
+            "endAt": "2023-12-07T00:00:00.000Z",
+            "licensePlate": "LOL1S70",
+            "carPrice": 250,
+            "rentPrice": 750,
+            "_id": "6567aae3403f23ef6a370e18",
             "__v": 0
         }
+
+        {
+            "userName": "Joaquim",
+            "userEmail": "admin@hotmail.com",
+            "userId": "65671e7da1a49b8ac6865370",
+            "carName": "M3",
+            "createdAt": "2023-12-03T00:00:00.000Z",
+            "endAt": "2023-12-06T00:00:00.000Z",
+            "licensePlate": "POP1Q69",
+            "carPrice": 400,
+            "rentPrice": 1200,
+            "_id": "6567ab29403f23ef6a370e2e",
+            "__v": 0
+        }
+
+    Históricos de alugueis:
+
+        userName: Renato,
+        userEmail: renato@gmail.com,
+        carName: Civic,
+        id: 6567aa23403f23ef6a370de5
 
 ## Créditos
 
