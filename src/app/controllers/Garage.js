@@ -149,7 +149,7 @@ router.post('/post-car', [isAuthenticated, isAdmin], (req, res) => {
     type = 'SUV';
   } else if (req.query.type == 'utilitario') {
     type = 'Utilitário';
-  } else {
+  } else if (req.query.type != 'sedan') {
     return res.status(400).send({ error: 'Modelo inserido não existente' });
   }
 
@@ -230,7 +230,7 @@ router.put('/update-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
       type = 'SUV';
     } else if (req.query.type == 'utilitario') {
       type = 'Utilitário';
-    } else {
+    } else if (req.query.type !== 'sedan') {
       return res.status(400).send({ error: 'Modelo inserido não existente' });
     }
   }
@@ -402,7 +402,8 @@ router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
       if (!car) {
         return res.status(404).send({ message: 'Carro não encontrado' });
       } else {
-        Rents.findOne(car.licensePlate)
+        const licensePlate = car.licensePlate;
+        Rents.findOne(licensePlate)
           .then((rent) => {
             if (!rent) {
               return res

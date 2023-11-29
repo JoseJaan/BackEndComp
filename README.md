@@ -36,8 +36,8 @@
             Define a estrutura de um veículo, contendo os seguintes campos:
         name, slug, brand, available, price, type, description, licensePlate, kilometers, featuredImage e images.
 
-            O campo "slug" recebe o "name" do veículo após um processo de "Slugify", enquanto "brand" passa pelo mesmo processo
-        para padronizar a escrita das brands.
+            O campo "slug" recebe o "name" do veículo após um processo de "Slugify", enquanto "brand"
+        passa pelo mesmo processo para padronizar a escrita das brands.
 
             Cada carro possui uma "licensePlate" única, que deve ser escrita no seguinte formato:
         (LM = Letra Maíscula, NI = Número inteiro entre 0 e 9)
@@ -69,7 +69,7 @@
 
     -History:
             Define a estrutura do históricos de alugueis, contendo os seguintes campos:
-        userName, userEmail, userId, carName, createdAt, endedAt, licensePlate, carPrice, rentPrice, kilometersDrive.
+        userName, userEmail, userId, carName, createdAt, endedAt, licensePlate, carPrice, rentPrice, kilometersDriven.
 
 ## Detalhamento das rotas:
 
@@ -182,7 +182,7 @@
                 (Escrever sem espaços)
 
 
-        ->https://rentacar-4y1u.onrender.com/garage/update-car/:carId - PUT - Apenas Admins
+        ->https://rentacar-4y1u.onrender.com/garage/update-car/:carId?type=lll - PUT - Apenas Admins
             Atualiza as informações de um carro
             Se um nova "licensePlate" for inserida, é verificada sua validade
             O "type" deve ser inserido no link, da mesma forma como é feita na rota de adicionar um carro
@@ -208,6 +208,10 @@
             Adiciona uma "featuredImage" ao carro, que é armazenada no Cloudinary
             Para utilizar a rota no Insomnia, deve-se selecionar "Multipart Form", selecionar "value" como "file"
                 e escrever "featuredImage" (sem as aspas) no "name"
+
+
+        ->https://rentacar-4y1u.onrender.com/garage/search-car/:carId - GET - Apenas Admins
+            Verifica se o carro buscado está em um aluguel no momento, se positivo, retorna os dados do aluguel
 
     -Rotas no src/app/controllers/Rentals.js
 
