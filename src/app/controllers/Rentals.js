@@ -306,7 +306,7 @@ Valido data inserida e calculo novo preço
 Atualizo aluguel
 */
 router.put('/update-rent/:rentId', isAuthenticated, (req, res) => {
-  const newEndDayMonth = req.body;
+  const { newEndDayMonth } = req.body;
 
   if (!newEndDayMonth) {
     return res.status(400).send({ error: 'Data não inserida.' });
