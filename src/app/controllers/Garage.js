@@ -353,7 +353,7 @@ router.delete('/delete-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
         'Error searching for car while removing car from database',
         error,
       );
-      return res.status(500).send({ message: 'Erro ao remover carro' });
+      return res.status(500).send({ message: 'Erro interno do servidor' });
     });
 });
 
@@ -395,5 +395,48 @@ router.post(
     }
   },
 );
+
+router.get('/search-car/:carId', [isAuthenticated, isAdmin], (req, res) => {
+  Cars.findById(req.params.carId)
+    .then((car) => {
+      if (!car) {
+        return res.status(404).send({ message: 'Carro não encontrado' });
+      } else {
+        Rents.findOne(car.licensePlate)
+          .then((rent) => {
+            if (!rent) {
+              return res
+                .status(200)
+                .send({ message: 'Carro não está em nenhum aluguel ativo' });
+            } else {
+              return {
+                userName: rent.userName,
+                userEmail: rent.userEmail,
+                creatAt: rent.createdAt,
+                endAt: rent.endAt,
+                id: rent._id,
+                rentPrice: rent.rentPrice,
+              };
+            }
+          })
+          .catch((error) => {
+            console.error(
+              'Error searching for rent while searching car in rents',
+              error,
+            );
+            return res
+              .status(500)
+              .send({ message: 'Erro interno do servidor' });
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(
+        'Error searching for car while searching car in rents',
+        error,
+      );
+      return res.status(500).send({ message: 'Erro interno do servidor' });
+    });
+});
 
 export default router;
