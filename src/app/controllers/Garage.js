@@ -96,7 +96,6 @@ router.get('/:carSlug', (req, res) => {
 //Rota para buscar todos os carros que possuem os dados digitados
 //Usuário pode buscar por brand, type e available
 //Qualquer pessoa pode ver, estando logada ou nao
-//Pode possuir mais de um filtro: Cars.find({brand: req.body.brand, quantity: req.body.quantity})
 router.get('/filter', (req, res) => {
   let searchOptions = {};
 
