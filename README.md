@@ -301,6 +301,42 @@
             "password": "12345!A"
         }
 
+    -Carros:
+
+        Name: Civic,
+        Brand: honda,
+        LicensePlate: ABC2G54,
+        Id: 6567a0d96e071911e372928f
+        Type: Sedan
+
+        Name: M3,
+        Brand: bmw,
+        LicensePlate: POP1Q69,
+        Id: 6567a1716e071911e37292b9
+        Type: Sedan
+
+        Name: Journey,
+        Brand: dodge,
+        LicensePlate: LOL1S70,
+        Id: 6567a1df6e071911e37292d6
+        Type: SUV
+
+    Alugueis:
+
+        {
+            "userName": "Joaquim",
+            "userEmail": "admin@hotmail.com",
+            "userId": "65671e7da1a49b8ac6865370",
+            "carName": "Journey",
+            "createdAt": "2023-12-01T00:00:00.000Z",
+            "endAt": "2023-12-10T00:00:00.000Z",
+            "licensePlate": "LOL1S70",
+            "carPrice": 250,
+            "rentPrice": 2250,
+            "_id": "6567a30f6e071911e3729321",
+            "__v": 0
+        }
+
 ## Créditos
 
 - José Acerbi Almeida Neto :o

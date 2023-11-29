@@ -98,13 +98,9 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
   if (days < 7) {
     User.findById(uid)
       .then((user) => {
-        Cars.findByIdAndUpdate(
-          { _id: req.params.carId, available: true },
-          { $set: { available: false } },
-          { new: true },
-        )
+        Cars.findById(req.params.carId)
           .then((car) => {
-            if (car) {
+            if (car.available) {
               const userName = user.name;
               const userId = user.id;
               const userEmail = user.email;
@@ -132,31 +128,31 @@ router.post('/post-rent/:carId', isAuthenticated, (req, res) => {
                 rentPrice,
               })
                 .then((rents) => {
-                  return res.status(200).send(rents);
-                })
-                .catch((error) => {
                   Cars.findByIdAndUpdate(
-                    { _id: req.params.carId },
-                    { $set: { available: true } },
+                    req.params.carId,
+                    { available: false },
                     { new: true },
                   )
                     .then(() => {
-                      console.error('Error registering new rent', error);
+                      return res.status(200).send(rents);
+                    })
+                    .catch((error) => {
+                      console.error(
+                        'Error updating car while registering new rent',
+                        error,
+                      );
                       return res.status(400).send({
                         message:
                           'Não foi possível cadastrar o aluguel, tente novamente',
                       });
-                    })
-                    .catch((revertError) => {
-                      console.error(
-                        'Error reverting available status to true',
-                        revertError,
-                      );
-                      return res.status(500).send({
-                        error:
-                          'Erro interno do servidor (revertendo available)',
-                      });
                     });
+                })
+                .catch((error) => {
+                  console.error('Error registering new rent', error);
+                  return res.status(400).send({
+                    message:
+                      'Não foi possível cadastrar o aluguel, tente novamente',
+                  });
                 });
             } else {
               return res
